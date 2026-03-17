@@ -1,0 +1,51 @@
+:root {
+  --color-primary: #65cd88;
+  --color-secondary: #164c01;
+  --color-light: #aae1ae;
+  --color-ultra-light: #a8f3af;
+  --color-dark: #033a07;
+
+  --font-family-base: system-ui, Avenir, Helvetica, Arial, sans-serif;
+}
+
+html,
+body,
+#root {
+  height: 100vh;
+}
+
+body {
+  direction: rtl;
+  min-width: 320px;
+  margin: 0;
+
+  font-family: var(--font-family-base);
+  line-height: 1.5;
+  font-weight: 400;
+
+  color: var(--color-secondary);
+  background-color: var(--color-primary);
+}
+
+a {
+  font-weight: 500;
+  color: var(--color-secondary);
+  text-decoration: inherit;
+}
+
+a:hover {
+  color: var(--color-dark);
+}
+
+.app-layout {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.app-content {
+  flex: 1;
+  padding: 16px;
+  overflow-y: auto;
+  padding-bottom: 80px;
+}
