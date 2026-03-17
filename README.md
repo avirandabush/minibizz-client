@@ -1,73 +1,85 @@
-# React + TypeScript + Vite
+# Small Business Payment Management System
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## Overview
 
-Currently, two official plugins are available:
+This project is a **digital payment management system** designed for small businesses (sole proprietors / freelancers) who issue receipts to clients. It replaces the traditional manual process of tracking payments on paper and entering them into government receipt platforms. The system allows you to:
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- Add and manage **clients**, **treatments/services**, and **payments**
+- Automatically track payment amounts and status
+- Filter and sort records
+- Edit or delete existing entries
+- Work with a **mock backend**, easily replaceable with a real API
+- Navigate seamlessly using a **bottom tab bar**
 
-## React Compiler
+The goal is to streamline the daily workflow for small businesses, ensuring all payment data is stored digitally and ready for receipt generation.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+---
 
-## Expanding the ESLint configuration
+## Features
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+### Payments
+- Record new payments by selecting a client and treatment
+- Amount automatically populated based on selected treatment, editable if needed
+- Track status (pending, receipt created)
+- Edit or delete payments
+- Filter and sort by client, treatment, or amount
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+### Clients
+- Add new clients with a simple form
+- Edit or delete existing clients
+- Filter and sort clients alphabetically
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+### Treatments
+- Add new treatments/services
+- Set price and active status
+- Edit or delete treatments
+- Filter and sort treatments
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+### Navigation
+- Bottom navigation bar with icons for:
+  - Payments
+  - Clients
+  - Treatments
+  - Settings
+- Tabs show both icons and labels; on small screens, only icons are displayed
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+### Forms & Modals
+- Modal-based forms for adding/editing payments, clients, and treatments
+- Forms are reactive:
+  - Payment form auto-updates amount based on selected treatment
+- Filter and sort menus close automatically when clicking outside
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+### Backend & Data
+- Services structured per entity (Payments, Clients, Treatments)
+- Centralized API request abstraction
+- Mock data fallback for development
+- Ready to integrate with real backend later
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+---
+
+## Technologies
+
+- **React 18** – Component-based UI
+- **TypeScript** – Type safety across the app
+- **CSS / modular styles** – Custom styling for components
+- **React Router v6** – Navigation and routing between pages
+- **Functional Components & Hooks** – `useState`, `useEffect` for state management
+- **UUID / crypto** – Generate unique IDs for mock records
+- **Modals, Menus, Forms** – Reusable components
+- **Mock Data** – Temporary storage for offline development
+
+---
+
+## Usage
+
+- Payments Tab – Add, edit, delete, filter, and sort payments
+- Clients Tab – Manage client records
+- Treatments Tab – Manage treatments/services
+- Settings Tab – Placeholder for future configurations
+
+---
+
+## License
+
+Aviran Dabush © 2026
+https://avirandabush.co.il
