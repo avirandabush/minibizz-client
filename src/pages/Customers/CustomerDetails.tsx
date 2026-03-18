@@ -1,7 +1,7 @@
 
 import { useParams, useNavigate } from 'react-router-dom'
 
-function ClientDetails() {
+function CustomerDetails() {
   const { id } = useParams()
   const navigate = useNavigate()
 
@@ -14,4 +14,4 @@ function ClientDetails() {
   )
 }
 
-export default ClientDetails
+export default CustomerDetails

@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { customersApi } from '../service/clients.api'
+import { customersApi } from '../service/customers.api'
 import type { Customer } from '../types/types'
 
 export function useCustomers() {

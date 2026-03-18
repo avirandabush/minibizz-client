@@ -1,9 +1,9 @@
 import { Routes, Route, Navigate } from 'react-router-dom'
 import Layout from './Layout'
 
-import ClientsPage from '../pages/Clients/ClientsPage'
-import NewClient from '../pages/Clients/NewClient'
-import ClientDetails from '../pages/Clients/ClientDetails'
+import CustomersPage from '../pages/Customers/CustomersPage'
+import NewCustomer from '../pages/Customers/NewCustomer'
+import CustomerDetails from '../pages/Customers/CustomerDetails'
 
 import PaymentsPage from '../pages/Payments/PaymentsPage'
 import NewPayment from '../pages/Payments/NewPayment'
@@ -31,11 +31,11 @@ function AppRoutes() {
           <Route path=":id" element={<PaymentDetails />} />
         </Route>
 
-        {/* Clients */}
-        <Route path="/clients">
-          <Route index element={<ClientsPage />} />
-          <Route path="new" element={<NewClient />} />
-          <Route path=":id" element={<ClientDetails />} />
+        {/* Customer */}
+        <Route path="/customers">
+          <Route index element={<CustomersPage />} />
+          <Route path="new" element={<NewCustomer />} />
+          <Route path=":id" element={<CustomerDetails />} />
         </Route>
 
         {/* Treatments */}

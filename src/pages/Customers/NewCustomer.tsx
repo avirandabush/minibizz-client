@@ -1,9 +1,9 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useCustomers } from '../../hooks/useCustomers'
-import './NewClient.css'
+import './NewCustomer.css'
 
-export default function NewClient() {
+export default function NewCustomer() {
   const navigate = useNavigate()
   const { createCustomer } = useCustomers()
 
@@ -27,7 +27,7 @@ export default function NewClient() {
         phone: phone.trim(),
       })
 
-      navigate('/clients')
+      navigate('/customers')
     } catch (e) {
       setError('שגיאה בשמירה')
     } finally {

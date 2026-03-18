@@ -14,7 +14,7 @@ export default function NavBar() {
           <span className="label">תשלומים</span>
         </NavLink>
 
-        <NavLink to="/clients" className={getClassName}>
+        <NavLink to="/customers" className={getClassName}>
           <span className="icon">👥</span>
           <span className="label">לקוחות</span>
         </NavLink>

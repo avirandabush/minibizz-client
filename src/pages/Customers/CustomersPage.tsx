@@ -3,9 +3,9 @@ import { useNavigate } from 'react-router-dom'
 import { useCustomers } from '../../hooks/useCustomers'
 import ListToolbar from '../../components/ListToolbar/ListToolbar'
 import List from '../../components/List/List'
-import ClientItem from '../../components/ListItem/ListItem'
+import CustomerItem from '../../components/ListItem/ListItem'
 
-export default function ClientsPage() {
+export default function CustomersPage() {
   const { customers, loading } = useCustomers()
   const [filteredItems, setFilteredItems] = useState(customers)
   const navigate = useNavigate()
@@ -46,7 +46,7 @@ export default function ClientsPage() {
   }
 
   const handleAdd = () => {
-    navigate('/clients/new')
+    navigate('/customers/new')
   }
 
   if (loading) {
@@ -65,7 +65,7 @@ export default function ClientsPage() {
       <List
         items={filteredItems}
         renderItem={(item) => (
-          <ClientItem key={item.id} item={item} />
+          <CustomerItem key={item.id} item={item} />
         )}
       />
     </div>

@@ -1,4 +1,4 @@
-.client-item {
+.customer-item {
   border-bottom: 1px solid #ddd;
   padding: 12px;
   display: flex;
@@ -10,11 +10,11 @@
   box-shadow: 0 1px 3px rgba(0,0,0,0.08);
 }
 
-.client-item strong {
+.customer-item strong {
   font-size: 16px;
 }
 
-.client-item span {
+.customer-item span {
   font-size: 14px;
   color: var(--secondary-color);
 }
