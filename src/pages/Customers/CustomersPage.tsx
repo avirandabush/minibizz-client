@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { useCustomers } from '../../hooks/useCustomers'
 import ListToolbar from '../../components/ListToolbar/ListToolbar'
 import List from '../../components/List/List'
-import CustomerItem from '../../components/ListItem/ListItem'
+import CustomerListItem from '../../components/ListItem/CustomerListItem'
 
 export default function CustomersPage() {
   const { customers, loading } = useCustomers()
@@ -65,7 +65,7 @@ export default function CustomersPage() {
       <List
         items={filteredItems}
         renderItem={(item) => (
-          <CustomerItem key={item.id} item={item} />
+          <CustomerListItem key={item.id} item={item} />
         )}
       />
     </div>

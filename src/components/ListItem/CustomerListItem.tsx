@@ -1,16 +1,11 @@
+import type { Customer } from '../../types/types'
 import './ListItem.css'
-
-type Customer = {
-  id: string
-  name: string
-  phone: string
-}
 
 type Props = {
   item: Customer
 }
 
-export default function CustomerItem({ item }: Props) {
+export default function CustomerListItem({ item }: Props) {
   return (
     <div className="customer-item">
       <strong>{item.name}</strong>
