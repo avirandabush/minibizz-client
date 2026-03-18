@@ -1,0 +1,40 @@
+{
+  "customers": [
+    {
+      "id": "1",
+      "name": "ישראל ישראלי",
+      "phone": "0501234567",
+      "createdAt": "2026-03-17"
+    },
+    {
+      "id": "2",
+      "name": "דוד כהן",
+      "phone": "0507654321",
+      "createdAt": "2026-03-17"
+    },
+    {
+      "id": "3",
+      "name": "שרה לוי",
+      "phone": "0509876543",
+      "createdAt": "2026-03-17"
+    }
+  ],
+  "treatments": [
+    {
+      "id": "1",
+      "name": "תספורת",
+      "price": 100,
+      "status": "ACTIVE",
+      "createdAt": "2026-03-17"
+    },
+    {
+      "id": "2",
+      "name": "זקן",
+      "price": 50,
+      "status": "ACTIVE",
+      "createdAt": "2026-03-17"
+    }
+  ],
+  "payments": [],
+  "$schema": "./node_modules/json-server/schema.json"
+}
