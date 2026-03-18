@@ -29,7 +29,7 @@ export type Treatment = {
 export type Customer = {
   id: string
   name: string
-  phone?: string
+  phone: string
   createdAt: string
 }
 
