@@ -1,5 +1,5 @@
 .customer-item {
-  border-bottom: 1px solid #ddd;
+  border-bottom: 1px solid var(--color-secondary);
   padding: 12px;
   display: flex;
   flex-direction: column;
@@ -7,7 +7,7 @@
   background: #fff;
   border-radius: 6px;
   margin-bottom: 8px;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+  box-shadow: 0 5px 13px rgba(222, 10, 20, 0.03);
 }
 
 .customer-item strong {
