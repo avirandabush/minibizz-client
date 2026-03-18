@@ -1,49 +1,47 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { useCustomers } from '../../hooks/useCustomers'
 import ListToolbar from '../../components/ListToolbar/ListToolbar'
 import List from '../../components/List/List'
 import ClientItem from '../../components/ListItem/ListItem'
 
-type Client = {
-  id: string
-  name: string
-  phone: string
-}
-
-const MOCK_CLIENTS: Client[] = [
-  { id: '1', name: 'אבי כהן', phone: '050-1234567' },
-  { id: '2', name: 'רונית לוי', phone: '052-7654321' },
-  { id: '3', name: 'דוד ישראלי', phone: '054-9876543' },
-]
-
 export default function ClientsPage() {
-  const [items, setItems] = useState<Client[]>([])
-  const [filteredItems, setFilteredItems] = useState<Client[]>([])
+  const { customers, loading } = useCustomers()
+  const [filteredItems, setFilteredItems] = useState(customers)
   const navigate = useNavigate()
 
+  // sync ראשוני + כשמגיעים נתונים מהשרת
   useEffect(() => {
-    setItems(MOCK_CLIENTS)
-    setFilteredItems(MOCK_CLIENTS)
-  }, [])
+    setFilteredItems(customers)
+  }, [customers])
 
   const handleSearch = (text: string) => {
+    const value = text.toLowerCase()
+
     setFilteredItems(
-      items.filter(i => i.name.includes(text) || i.phone.includes(text))
+      customers.filter(c =>
+        c.name.toLowerCase().includes(value) ||
+        (c.phone ?? '').includes(value)
+      )
     )
   }
 
   const handleSort = (option: string) => {
     const sorted = [...filteredItems].sort((a, b) =>
-      option === 'שם א-ת' ? a.name.localeCompare(b.name) : b.name.localeCompare(a.name)
+      option === 'שם א-ת'
+        ? a.name.localeCompare(b.name)
+        : b.name.localeCompare(a.name)
     )
+
     setFilteredItems(sorted)
   }
 
   const handleFilter = (option: string) => {
+    // כרגע אין שדה אמיתי לסינון → נשאיר placeholder חכם
     if (option === 'לקוחות חדשים') {
-      setFilteredItems(items.filter((_, idx) => idx % 2 === 0))
+      setFilteredItems(customers.slice(-5)) // לדוגמה: אחרונים
     } else {
-      setFilteredItems(items.filter((_, idx) => idx % 2 !== 0))
+      setFilteredItems(customers)
     }
   }
 
@@ -51,15 +49,25 @@ export default function ClientsPage() {
     navigate('/clients/new')
   }
 
+  if (loading) {
+    return <div>Loading...</div>
+  }
+
   return (
-    <div style={{ margin: "16px" }}>
+    <div style={{ margin: '16px' }}>
       <ListToolbar
         onSearch={handleSearch}
         onSort={handleSort}
         onFilter={handleFilter}
         onAdd={handleAdd}
       />
-      <List items={filteredItems} renderItem={item => <ClientItem key={item.id} item={item} />} />
+
+      <List
+        items={filteredItems}
+        renderItem={(item) => (
+          <ClientItem key={item.id} item={item} />
+        )}
+      />
     </div>
   )
 }
