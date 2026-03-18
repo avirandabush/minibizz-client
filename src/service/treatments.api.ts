@@ -1,4 +1,4 @@
-import type { Treatment } from './../types/treatment.types'
+import type { Treatment } from '../types/types'
 
 const mockTreatments: Treatment[] = [
   { id: '1', name: 'Menicur', price: 120, isActive: true },

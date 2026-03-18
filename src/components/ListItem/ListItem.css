@@ -1,0 +1,20 @@
+.client-item {
+  border-bottom: 1px solid #ddd;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  background: #fff;
+  border-radius: 6px;
+  margin-bottom: 8px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+}
+
+.client-item strong {
+  font-size: 16px;
+}
+
+.client-item span {
+  font-size: 14px;
+  color: var(--secondary-color);
+}

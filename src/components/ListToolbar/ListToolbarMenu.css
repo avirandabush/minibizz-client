@@ -1,0 +1,20 @@
+.menu {
+  position: absolute;
+  background: #e73b3b;
+  border: 1px solid #e79999;
+  border-radius: 6px;
+  padding: 8px 0;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+  z-index: 100;
+  min-width: 140px; /* מספיק מקום לכל ערך */
+}
+
+.menu div {
+  padding: 8px 12px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.menu div:hover {
+  background-color: var(--light-color);
+}

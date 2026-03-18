@@ -49,3 +49,9 @@ a:hover {
   overflow-y: auto;
   padding-bottom: 80px;
 }
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}

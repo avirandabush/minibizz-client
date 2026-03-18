@@ -1,0 +1,7 @@
+.list-container {
+    margin: 0 auto;
+    padding: 8px;
+    width: 100%;
+    max-width: 720px;
+    box-sizing: border-box;
+}
