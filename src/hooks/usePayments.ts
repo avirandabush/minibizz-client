@@ -4,10 +4,16 @@ import type { Payment } from '../types/types'
 
 export function usePayments() {
     const [payments, setPayments] = useState<Payment[]>([])
+    const [loading, setLoading] = useState(false)
 
     const fetchPayments = async () => {
-        const data = await paymentsApi.getAll()
-        setPayments(data)
+        setLoading(true)
+        try {
+            const data = await paymentsApi.getAll()
+            setPayments(data)
+        } finally {
+            setLoading(false)
+        }
     }
 
     const createPayment = async (data: Omit<Payment, 'id'>) => {
@@ -21,6 +27,7 @@ export function usePayments() {
 
     return {
         payments,
+        loading,
         fetchPayments,
         createPayment,
     }
