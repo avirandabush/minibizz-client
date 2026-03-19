@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { useCustomers } from '../../hooks/useCustomers'
 import { useTreatments } from '../../hooks/useTreatments'
 import { usePayments } from '../../hooks/usePayments'
-import { PaymentMethod, PaymentStatus } from '../../types/types'
+import { PaymentMethod, PaymentStatus, TreatmentStatus } from '../../types/types'
 
 export default function PaymentCreatePage() {
   const navigate = useNavigate()
@@ -18,13 +18,17 @@ export default function PaymentCreatePage() {
   const [method, setMethod] = useState<PaymentMethod>(PaymentMethod.CASH)
   const [loading, setLoading] = useState(false)
 
+  const activeTreatments = treatments.filter(
+    t => t.status === TreatmentStatus.ACTIVE
+  )
+
   useEffect(() => {
-    const total = treatments
+    const total = activeTreatments
       .filter(t => selectedTreatments.includes(t.id))
       .reduce((sum, t) => sum + t.price, 0)
 
     setAmount(total)
-  }, [selectedTreatments, treatments])
+  }, [selectedTreatments, activeTreatments])
 
   const toggleTreatment = (id: string) => {
     setSelectedTreatments(prev =>
@@ -40,7 +44,7 @@ export default function PaymentCreatePage() {
     setLoading(true)
 
     try {
-      const selected = treatments.filter(t =>
+      const selected = activeTreatments.filter(t =>
         selectedTreatments.includes(t.id)
       )
 
@@ -87,7 +91,7 @@ export default function PaymentCreatePage() {
       <div className="form-group">
         <label>טיפולים</label>
 
-        {treatments.map(t => (
+        {activeTreatments.map(t => (
           <div key={t.id}>
             <label>
               <input
