@@ -5,7 +5,10 @@ export const treatmentsApi = {
   getAll: () => apiClient.get<Treatment[]>('/treatments'),
 
   create: (data: Omit<Treatment, 'id' | 'createdAt'>) =>
-    apiClient.post<Treatment>('/treatments', data),
+    apiClient.post<Treatment>('/treatments', {
+      ...data,
+      createdAt: new Date().toISOString(),
+    }),
 
   update: (id: string, data: Partial<Treatment>) =>
   apiClient.patch<Treatment>(`/treatments/${id}`, data),
