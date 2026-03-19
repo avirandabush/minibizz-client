@@ -21,6 +21,12 @@ export function usePayments() {
         setPayments(prev => [...prev, newPayment])
     }
 
+    const updatePayment = async (data: Partial<Payment> & { id: string }) => {
+        const updatedPayment = await paymentsApi.update(data.id, data)
+        setPayments(prev => prev.map(p => p.id === data.id ? { ...p, ...updatedPayment } : p)
+        )
+    }
+
     useEffect(() => {
         fetchPayments()
     }, [])
@@ -30,5 +36,6 @@ export function usePayments() {
         loading,
         fetchPayments,
         createPayment,
+        updatePayment
     }
 }

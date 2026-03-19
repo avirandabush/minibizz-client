@@ -23,7 +23,8 @@ export function useTreatments() {
 
     const updateTreatment = async (data: Partial<Treatment> & { id: string }) => {
         const updatedTreatment = await treatmentsApi.update(data.id, data)
-        setTreatments(prev => prev.map(t => t.id === data.id ? updatedTreatment : t))
+        setTreatments(prev => prev.map(t => t.id === data.id ? { ...t, ...updatedTreatment } : t)
+        )
     }
 
     const deleteTreatment = async (id: string) => {

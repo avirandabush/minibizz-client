@@ -8,5 +8,7 @@ export const paymentsApi = {
     apiClient.post<Payment>('/payments', data),
 
   update: (id: string, data: Partial<Payment>) =>
-    apiClient.put<Payment>(`/payments/${id}`, data),
+    apiClient.patch<Payment>(`/payments/${id}`, data),
+
+  delete: (id: string) => apiClient.delete(`/payments/${id}`),
 }

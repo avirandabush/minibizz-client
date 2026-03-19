@@ -6,9 +6,10 @@ import { useCustomers } from '../../hooks/useCustomers'
 import ListToolbar from '../../components/ListToolbar/ListToolbar'
 import List from '../../components/List/List'
 import PaymentListItem from '../../components/ListItem/PaymentListItem'
+import { PaymentStatus, type Payment } from '../../types/types'
 
 export default function PaymentsPage() {
-  const { payments, loading } = usePayments()
+  const { payments, updatePayment, loading } = usePayments()
   const { customers } = useCustomers()
 
   const [filteredItems, setFilteredItems] = useState(payments)
@@ -59,6 +60,17 @@ export default function PaymentsPage() {
     }
   }
 
+  const handleToggle = async (p: Payment) => {
+    const newStatus = p.status === PaymentStatus.COMPLETED 
+    ? PaymentStatus.PENDING 
+    : PaymentStatus.COMPLETED
+
+    await updatePayment({
+      id: p.id,
+      status: newStatus
+    })
+  }
+
   const handleAdd = () => {
     navigate('/payments/new')
   }
@@ -83,6 +95,7 @@ export default function PaymentsPage() {
             key={item.id}
             item={item}
             customerName={getCustomerName(item.customerId)}
+            onToggle={handleToggle}
           />
         )}
       />
