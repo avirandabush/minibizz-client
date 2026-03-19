@@ -8,5 +8,7 @@ export const treatmentsApi = {
     apiClient.post<Treatment>('/treatments', data),
 
   update: (id: string, data: Partial<Treatment>) =>
-    apiClient.put<Treatment>(`/treatments/${id}`, data),
+  apiClient.patch<Treatment>(`/treatments/${id}`, data),
+
+  delete: (id: string) => apiClient.delete(`/treatments/${id}`),
 }
