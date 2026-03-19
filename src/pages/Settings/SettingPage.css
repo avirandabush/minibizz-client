@@ -1,0 +1,50 @@
+.settings-page {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 16px;
+    box-sizing: border-box;
+}
+
+.settings-header {
+    text-align: center;
+    margin-top: 24px;
+}
+
+.settings-header h1 {
+    font-size: 28px;
+    font-weight: 800;
+    color: var(--color-dark);
+}
+
+.settings-header h2 {
+    font-size: 18px;
+    color: var(--color-secondary);
+    margin-top: 8px;
+}
+
+.settings-content {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #777;
+}
+
+.settings-footer {
+    text-align: center;
+    font-size: 12px;
+    color: #999;
+    padding: 16px 0;
+}
+
+.settings-footer a {
+    color: var(--secondary-color);
+    text-decoration: none;
+}
+
+.settings-footer a:hover {
+    text-decoration: underline;
+}
