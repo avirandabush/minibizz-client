@@ -4,13 +4,14 @@ import ListToolbar from '../../components/ListToolbar/ListToolbar'
 import List from '../../components/List/List'
 import { useTreatments } from '../../hooks/useTreatments'
 import TreatmentListItem from '../../components/ListItem/TreatmentListItem'
+import type { Treatment } from '../../types/types'
+import { TreatmentStatus } from '../../types/types'
 
 export default function TreatmentsPage() {
-  const { treatments, loading } = useTreatments()
+  const { treatments, updateTreatment, loading } = useTreatments()
   const [filteredItems, setFilteredItems] = useState(treatments)
   const navigate = useNavigate()
 
-  // sync ראשוני + כשמגיעים נתונים מהשרת
   useEffect(() => {
     setFilteredItems(treatments)
   }, [treatments])
@@ -44,6 +45,17 @@ export default function TreatmentsPage() {
     }
   }
 
+  const handleToggle = async (t: Treatment) => {
+    const newStatus = t.status === TreatmentStatus.ACTIVE
+      ? TreatmentStatus.INACTIVE
+      : TreatmentStatus.ACTIVE
+
+    await updateTreatment({
+      id: t.id,
+      status: newStatus
+    })
+  }
+
   const handleAdd = () => {
     navigate('/treatments/new')
   }
@@ -64,7 +76,10 @@ export default function TreatmentsPage() {
       <List
         items={filteredItems}
         renderItem={(item) => (
-          <TreatmentListItem key={item.id} item={item} />
+          <TreatmentListItem
+            key={item.id}
+            item={item}
+            onToggle={handleToggle} />
         )}
       />
     </div>
