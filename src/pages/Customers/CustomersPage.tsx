@@ -10,7 +10,6 @@ export default function CustomersPage() {
   const [filteredItems, setFilteredItems] = useState(customers)
   const navigate = useNavigate()
 
-  // sync ראשוני + כשמגיעים נתונים מהשרת
   useEffect(() => {
     setFilteredItems(customers)
   }, [customers])
@@ -37,9 +36,8 @@ export default function CustomersPage() {
   }
 
   const handleFilter = (option: string) => {
-    // כרגע אין שדה אמיתי לסינון → נשאיר placeholder חכם
     if (option === 'לקוחות חדשים') {
-      setFilteredItems(customers.slice(-5)) // לדוגמה: אחרונים
+      setFilteredItems(customers.slice(-5))
     } else {
       setFilteredItems(customers)
     }
