@@ -14,7 +14,7 @@ export const customersApi = {
     }),
 
   update: (id: string, data: Partial<Customer>) =>
-    apiClient.put<Customer>(`/customers/${id}`, data),
+  apiClient.patch<Customer>(`/customers/${id}`, data),
 
   delete: (id: string) =>
     apiClient.delete<void>(`/customers/${id}`),
