@@ -4,8 +4,9 @@ import ListToolbar from '../../components/ListToolbar/ListToolbar'
 import List from '../../components/List/List'
 import { useTreatments } from '../../hooks/useTreatments'
 import TreatmentListItem from '../../components/ListItem/TreatmentListItem'
-import type { Treatment } from '../../types/types'
-import { TreatmentStatus } from '../../types/types'
+import { TreatmentStatus, type Treatment } from '../../types/types'
+import EmptyState from '../../components/EmptyState/EmptyState'
+import SkeletonList from '../../components/Skeleton/SkeletonList/SkeletonList'
 
 export default function TreatmentsPage() {
   const { treatments, updateTreatment, loading } = useTreatments()
@@ -60,10 +61,6 @@ export default function TreatmentsPage() {
     navigate('/treatments/new')
   }
 
-  if (loading) {
-    return <div>Loading...</div>
-  }
-
   return (
     <div style={{ margin: '16px' }}>
       <ListToolbar
@@ -73,15 +70,30 @@ export default function TreatmentsPage() {
         onAdd={handleAdd}
       />
 
-      <List
-        items={filteredItems}
-        renderItem={(item) => (
-          <TreatmentListItem
-            key={item.id}
-            item={item}
-            onToggle={handleToggle} />
-        )}
-      />
+      {loading ? (
+        <SkeletonList />
+      ) : (
+        <>
+          {filteredItems.length === 0 ? (
+            <EmptyState
+              title="אין טיפולים"
+              subtitle="הוסף טיפול חדש כדי להתחיל"
+              actionLabel="הוסף טיפול"
+              onAction={handleAdd}
+            />
+          ) : (
+            <List
+              items={filteredItems}
+              renderItem={(item) => (
+                <TreatmentListItem
+                  key={item.id}
+                  item={item}
+                  onToggle={handleToggle} />
+              )}
+            />
+          )}
+        </>
+      )}
     </div>
   )
 }

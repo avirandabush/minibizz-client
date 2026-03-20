@@ -7,6 +7,8 @@ import ListToolbar from '../../components/ListToolbar/ListToolbar'
 import List from '../../components/List/List'
 import PaymentListItem from '../../components/ListItem/PaymentListItem'
 import { PaymentStatus, type Payment } from '../../types/types'
+import EmptyState from '../../components/EmptyState/EmptyState'
+import SkeletonList from '../../components/Skeleton/SkeletonList/SkeletonList'
 
 export default function PaymentsPage() {
   const { payments, updatePayment, loading } = usePayments()
@@ -61,9 +63,9 @@ export default function PaymentsPage() {
   }
 
   const handleToggle = async (p: Payment) => {
-    const newStatus = p.status === PaymentStatus.COMPLETED 
-    ? PaymentStatus.PENDING 
-    : PaymentStatus.COMPLETED
+    const newStatus = p.status === PaymentStatus.COMPLETED
+      ? PaymentStatus.PENDING
+      : PaymentStatus.COMPLETED
 
     await updatePayment({
       id: p.id,
@@ -74,11 +76,6 @@ export default function PaymentsPage() {
   const handleAdd = () => {
     navigate('/payments/new')
   }
-
-  if (loading) {
-    return <div>Loading...</div>
-  }
-
   return (
     <div style={{ margin: '16px' }}>
       <ListToolbar
@@ -88,17 +85,32 @@ export default function PaymentsPage() {
         onAdd={handleAdd}
       />
 
-      <List
-        items={filteredItems}
-        renderItem={(item) => (
-          <PaymentListItem
-            key={item.id}
-            item={item}
-            customerName={getCustomerName(item.customerId)}
-            onToggle={handleToggle}
-          />
-        )}
-      />
+      {loading ? (
+        <SkeletonList />
+      ) : (
+        <>
+          {filteredItems.length === 0 ? (
+            <EmptyState
+              title="אין תשלומים"
+              subtitle="הוסף תשלום חדש כדי להתחיל"
+              actionLabel="הוסף תשלום"
+              onAction={handleAdd}
+            />
+          ) : (
+            <List
+              items={filteredItems}
+              renderItem={(item) => (
+                <PaymentListItem
+                  key={item.id}
+                  item={item}
+                  customerName={getCustomerName(item.customerId)}
+                  onToggle={handleToggle}
+                />
+              )}
+            />
+          )}
+        </>
+      )}
     </div>
   )
 }

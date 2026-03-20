@@ -5,6 +5,7 @@ import ListToolbar from '../../components/ListToolbar/ListToolbar'
 import List from '../../components/List/List'
 import CustomerListItem from '../../components/ListItem/CustomerListItem'
 import EmptyState from '../../components/EmptyState/EmptyState'
+import SkeletonList from '../../components/Skeleton/SkeletonList/SkeletonList'
 
 export default function CustomersPage() {
   const { customers, loading } = useCustomers()
@@ -48,10 +49,6 @@ export default function CustomersPage() {
     navigate('/customers/new')
   }
 
-  if (loading) {
-    return <div>Loading...</div>
-  }
-
   return (
     <div style={{ margin: '16px' }}>
       <ListToolbar
@@ -61,24 +58,30 @@ export default function CustomersPage() {
         onAdd={handleAdd}
       />
 
-      {filteredItems.length === 0 ? (
-        <EmptyState
-          title="אין לקוחות"
-          subtitle="התחל על ידי הוספת לקוח חדש"
-          actionLabel="הוסף לקוח"
-          onAction={handleAdd}
-        />
+      {loading ? (
+        <SkeletonList />
       ) : (
-        <List
-          items={filteredItems}
-          renderItem={(item) => (
-            <CustomerListItem
-              key={item.id}
-              item={item}
-              onClick={() => navigate(`/customers/${item.id}`)}
+        <>
+          {filteredItems.length === 0 ? (
+            <EmptyState
+              title="אין לקוחות"
+              subtitle="הוסף לקוח חדש כדי להתחיל"
+              actionLabel="הוסף לקוח"
+              onAction={handleAdd}
+            />
+          ) : (
+            <List
+              items={filteredItems}
+              renderItem={(item) => (
+                <CustomerListItem
+                  key={item.id}
+                  item={item}
+                  onClick={() => navigate(`/customers/${item.id}`)}
+                />
+              )}
             />
           )}
-        />
+        </>
       )}
     </div>
   )
