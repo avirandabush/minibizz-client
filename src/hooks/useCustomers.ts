@@ -21,6 +21,21 @@ export function useCustomers() {
         setCustomers(prev => [...prev, newCustomer])
     }
 
+    const updateCustomer = async (data: Partial<Customer> & { id: string }) => {
+        const updated = await customersApi.update(data.id, data)
+
+        setCustomers(prev =>
+            prev.map(c =>
+                c.id === data.id ? { ...c, ...updated } : c
+            )
+        )
+    }
+
+    const deleteCustomer = async (id: string) => {
+        await customersApi.delete(id)
+        setCustomers(prev => prev.filter(c => c.id !== id))
+    }
+
     useEffect(() => {
         fetchCustomers()
     }, [])
@@ -30,5 +45,7 @@ export function useCustomers() {
         loading,
         fetchCustomers,
         createCustomer,
+        updateCustomer,
+        deleteCustomer,
     }
 }
