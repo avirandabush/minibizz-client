@@ -4,6 +4,7 @@ import { useCustomers } from '../../hooks/useCustomers'
 import ListToolbar from '../../components/ListToolbar/ListToolbar'
 import List from '../../components/List/List'
 import CustomerListItem from '../../components/ListItem/CustomerListItem'
+import EmptyState from '../../components/EmptyState/EmptyState'
 
 export default function CustomersPage() {
   const { customers, loading } = useCustomers()
@@ -60,12 +61,25 @@ export default function CustomersPage() {
         onAdd={handleAdd}
       />
 
-      <List
-        items={filteredItems}
-        renderItem={(item) => (
-          <CustomerListItem key={item.id} item={item} />
-        )}
-      />
+      {filteredItems.length === 0 ? (
+        <EmptyState
+          title="אין לקוחות"
+          subtitle="התחל על ידי הוספת לקוח חדש"
+          actionLabel="הוסף לקוח"
+          onAction={handleAdd}
+        />
+      ) : (
+        <List
+          items={filteredItems}
+          renderItem={(item) => (
+            <CustomerListItem
+              key={item.id}
+              item={item}
+              onClick={() => navigate(`/customers/${item.id}`)}
+            />
+          )}
+        />
+      )}
     </div>
   )
 }
