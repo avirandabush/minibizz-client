@@ -1,6 +1,9 @@
+import { useAuth } from '../../app/AuthContext'
 import './SettingPage.css'
 
 export default function SettingsPage() {
+  const { user, logout } = useAuth()
+
   return (
     <div className="settings-page">
       <div className="settings-header">
@@ -9,7 +12,9 @@ export default function SettingsPage() {
       </div>
 
       <div className="settings-content">
-        <h3>Settings</h3>
+        <h3>Welcome</h3>
+        <p>{user?.email}!</p>
+        <button onClick={logout}>התנתק</button>
       </div>
 
       <div className="settings-footer">

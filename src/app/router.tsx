@@ -1,4 +1,5 @@
 import { Routes, Route, Navigate } from 'react-router-dom'
+import ProtectedRoute from './ProtectedRoute'
 import Layout from './Layout'
 
 import CustomersPage from '../pages/Customers/CustomersPage'
@@ -14,11 +15,16 @@ import NewTreatment from '../pages/Treatments/NewTreatment'
 import TreatmentDetails from '../pages/Treatments/TreatmentDetails'
 
 import SettingsPage from '../pages/Settings/SettingPage'
+import AuthPage from '../pages/Auth/AuthPage'
 
 function AppRoutes() {
   return (
     <Routes>
-      <Route element={<Layout />}>
+
+      {/* Auth */}
+      <Route path="/auth" element={<AuthPage />} />
+
+      <Route element={<ProtectedRoute><Layout /></ProtectedRoute>}>
 
         {/* Redirect root → payments */}
         <Route path="/" element={<Navigate to="/payments" replace />} />
