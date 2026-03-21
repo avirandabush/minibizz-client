@@ -1,4 +1,3 @@
-import './SkeletonList.css'
 import SkeletonListItem from '../SkeletonListItem/SkeletonListItem'
 
 type Props = {
