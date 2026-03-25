@@ -1,10 +1,13 @@
 import { useEffect, useState } from 'react'
 import { treatmentsApi } from '../service/treatments.api'
+import { useAuth } from '../app/AuthContext'
 import type { Treatment } from '../types/types'
 
 export function useTreatments() {
     const [treatments, setTreatments] = useState<Treatment[]>([])
     const [loading, setLoading] = useState(false)
+
+    const { user } = useAuth()
 
     const fetchTreatments = async () => {
         setLoading(true)
@@ -33,8 +36,10 @@ export function useTreatments() {
     }
 
     useEffect(() => {
-        fetchTreatments()
-    }, [])
+        if (user) {
+            fetchTreatments()
+        }
+    }, [user])
 
     return {
         treatments,

@@ -20,6 +20,7 @@ export type PaymentStatus = (typeof PaymentStatus)[keyof typeof PaymentStatus];
 
 export type Treatment = {
   id: string
+  userId: string
   name: string
   createdAt: string
   status: TreatmentStatus
@@ -28,6 +29,7 @@ export type Treatment = {
 
 export type Customer = {
   id: string
+  userId: string
   name: string
   phone: string
   createdAt: string
@@ -35,6 +37,7 @@ export type Customer = {
 
 export type Payment = {
   id: string
+  userId: string
   date: string
   customerId: string
   treatments: {

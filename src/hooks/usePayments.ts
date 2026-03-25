@@ -1,10 +1,13 @@
 import { useEffect, useState } from 'react'
 import { paymentsApi } from '../service/payments.api'
+import { useAuth } from '../app/AuthContext'
 import type { Payment } from '../types/types'
 
 export function usePayments() {
     const [payments, setPayments] = useState<Payment[]>([])
     const [loading, setLoading] = useState(false)
+
+    const { user } = useAuth()
 
     const fetchPayments = async () => {
         setLoading(true)
@@ -28,8 +31,10 @@ export function usePayments() {
     }
 
     useEffect(() => {
-        fetchPayments()
-    }, [])
+        if (user) {
+            fetchPayments()
+        }
+    }, [user])
 
     return {
         payments,

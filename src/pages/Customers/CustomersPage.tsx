@@ -20,7 +20,7 @@ export default function CustomersPage() {
     const value = text.toLowerCase()
 
     setFilteredItems(
-      customers.filter(c =>
+      customers.filter((c): boolean =>
         c.name.toLowerCase().includes(value) ||
         (c.phone ?? '').includes(value)
       )

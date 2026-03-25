@@ -1,10 +1,13 @@
 import { useEffect, useState } from 'react'
 import { customersApi } from '../service/customers.api'
+import { useAuth } from '../app/AuthContext'
 import type { Customer } from '../types/types'
 
 export function useCustomers() {
     const [customers, setCustomers] = useState<Customer[]>([])
     const [loading, setLoading] = useState(false)
+
+    const { user } = useAuth()
 
     const fetchCustomers = async () => {
         setLoading(true)
@@ -37,8 +40,10 @@ export function useCustomers() {
     }
 
     useEffect(() => {
-        fetchCustomers()
-    }, [])
+        if (user) {
+            fetchCustomers()
+        }
+    }, [user])
 
     return {
         customers,
