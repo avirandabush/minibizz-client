@@ -13,7 +13,6 @@ import SkeletonList from '../../components/Skeleton/SkeletonList/SkeletonList'
 export default function PaymentsPage() {
   const { payments, updatePayment, loading } = usePayments()
   const { customers } = useCustomers()
-
   const [filteredItems, setFilteredItems] = useState(payments)
   const navigate = useNavigate()
 
@@ -21,7 +20,6 @@ export default function PaymentsPage() {
     setFilteredItems(payments)
   }, [payments])
 
-  // helper למציאת שם לקוח
   const getCustomerName = (customerId: string) => {
     return customers.find(c => c.id === customerId)?.name || 'לא ידוע'
   }
@@ -105,6 +103,7 @@ export default function PaymentsPage() {
                   item={item}
                   customerName={getCustomerName(item.customerId)}
                   onToggle={handleToggle}
+                  onClick={() => navigate(`/payments/${item.id}`)}
                 />
               )}
             />

@@ -88,7 +88,9 @@ export default function TreatmentsPage() {
                 <TreatmentListItem
                   key={item.id}
                   item={item}
-                  onToggle={handleToggle} />
+                  onToggle={handleToggle}
+                  onClick={() => navigate(`/treatments/${item.id}`)}
+                />
               )}
             />
           )}
