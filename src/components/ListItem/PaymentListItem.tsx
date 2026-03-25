@@ -1,4 +1,4 @@
-import { type Payment, PaymentStatus } from '../../types/types'
+import { PaymentStatus, type Payment } from '../../types/index'
 import BaseListItem from './BaseListItem'
 
 type Props = {

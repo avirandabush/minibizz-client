@@ -34,8 +34,7 @@ export default function CustomerDetails() {
     setSaving(true)
 
     try {
-      await updateCustomer({
-        id: customer.id,
+      await updateCustomer(customer.id, {
         name: name.trim(),
         phone: phone.trim(),
       })

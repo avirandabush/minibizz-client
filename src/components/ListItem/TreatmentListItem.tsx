@@ -1,4 +1,4 @@
-import { TreatmentStatus, type Treatment } from '../../types/types'
+import { TreatmentStatus, type Treatment } from '../../types/index'
 import BaseListItem from './BaseListItem'
 
 type Props = {

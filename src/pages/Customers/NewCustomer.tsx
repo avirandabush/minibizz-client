@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useCustomers } from '../../hooks/useCustomers'
+import { LeadSource } from '../../types/index'
 import './NewCustomer.css'
 
 export default function NewCustomer() {
@@ -24,7 +25,13 @@ export default function NewCustomer() {
     try {
       await createCustomer({
         name: name.trim(),
+        birthDate: '',
         phone: phone.trim(),
+        email: '',
+        address: '',
+        notes: '',
+        leadSource: LeadSource.FRIEND,
+        isActive: false
       })
 
       navigate('/customers')

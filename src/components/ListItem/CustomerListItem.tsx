@@ -1,4 +1,4 @@
-import type { Customer } from '../../types/types'
+import type { Customer } from "../../types/index"
 import BaseListItem from './BaseListItem'
 
 type Props = {

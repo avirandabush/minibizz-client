@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { useCustomers } from '../../hooks/useCustomers'
 import { useTreatments } from '../../hooks/useTreatments'
 import { usePayments } from '../../hooks/usePayments'
-import { PaymentMethod, PaymentStatus, TreatmentStatus } from '../../types/types'
+import { PaymentMethod, PaymentStatus, TreatmentStatus } from '../../types/index'
 
 export default function PaymentCreatePage() {
   const navigate = useNavigate()
@@ -49,17 +49,20 @@ export default function PaymentCreatePage() {
       )
 
       await createPayment({
-        date: new Date().toISOString(),
         customerId,
         treatments: selected.map(t => ({
           treatmentId: t.id,
           name: t.name,
           price: t.price,
         })),
-        amount,
-        method,
+        amount: amount,
+        discount: 10,
+        total: 20,
+        method: method,
         status: PaymentStatus.PENDING,
-      })
+        referenceNumber: '',
+        date: new Date().toISOString(),
+      });
 
       navigate('/payments')
     } finally {

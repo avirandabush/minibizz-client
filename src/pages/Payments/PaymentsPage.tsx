@@ -6,7 +6,7 @@ import { useCustomers } from '../../hooks/useCustomers'
 import ListToolbar from '../../components/ListToolbar/ListToolbar'
 import List from '../../components/List/List'
 import PaymentListItem from '../../components/ListItem/PaymentListItem'
-import { PaymentStatus, type Payment } from '../../types/types'
+import { PaymentStatus, type Payment } from '../../types/index'
 import EmptyState from '../../components/EmptyState/EmptyState'
 import SkeletonList from '../../components/Skeleton/SkeletonList/SkeletonList'
 
@@ -65,8 +65,7 @@ export default function PaymentsPage() {
       ? PaymentStatus.PENDING
       : PaymentStatus.COMPLETED
 
-    await updatePayment({
-      id: p.id,
+    await updatePayment(p.id, {
       status: newStatus
     })
   }

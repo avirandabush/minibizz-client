@@ -4,7 +4,7 @@ import ListToolbar from '../../components/ListToolbar/ListToolbar'
 import List from '../../components/List/List'
 import { useTreatments } from '../../hooks/useTreatments'
 import TreatmentListItem from '../../components/ListItem/TreatmentListItem'
-import { TreatmentStatus, type Treatment } from '../../types/types'
+import { TreatmentStatus, type Treatment } from '../../types/index'
 import EmptyState from '../../components/EmptyState/EmptyState'
 import SkeletonList from '../../components/Skeleton/SkeletonList/SkeletonList'
 
@@ -51,8 +51,7 @@ export default function TreatmentsPage() {
       ? TreatmentStatus.INACTIVE
       : TreatmentStatus.ACTIVE
 
-    await updateTreatment({
-      id: t.id,
+    await updateTreatment(t.id, {
       status: newStatus
     })
   }

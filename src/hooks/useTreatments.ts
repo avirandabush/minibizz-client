@@ -1,12 +1,11 @@
 import { useEffect, useState } from 'react'
-import { treatmentsApi } from '../service/treatments.api'
+import { treatmentsApi, type CreateTreatmentDTO } from '../service/treatments.api'
 import { useAuth } from '../app/AuthContext'
-import type { Treatment } from '../types/types'
+import type { Treatment } from "../types/index"
 
 export function useTreatments() {
     const [treatments, setTreatments] = useState<Treatment[]>([])
     const [loading, setLoading] = useState(false)
-
     const { user } = useAuth()
 
     const fetchTreatments = async () => {
@@ -19,15 +18,15 @@ export function useTreatments() {
         }
     }
 
-    const createTreatment = async (data: Omit<Treatment, 'id' | 'createdAt'>) => {
+    const createTreatment = async (data: CreateTreatmentDTO) => {
         const newTreatment = await treatmentsApi.create(data)
         setTreatments(prev => [...prev, newTreatment])
+        return newTreatment
     }
 
-    const updateTreatment = async (data: Partial<Treatment> & { id: string }) => {
-        const updatedTreatment = await treatmentsApi.update(data.id, data)
-        setTreatments(prev => prev.map(t => t.id === data.id ? { ...t, ...updatedTreatment } : t)
-        )
+    const updateTreatment = async (id: string, data: Partial<CreateTreatmentDTO>) => {
+        const updated = await treatmentsApi.update(id, data)
+        setTreatments(prev => prev.map(t => t.id === id ? { ...t, ...updated } : t))
     }
 
     const deleteTreatment = async (id: string) => {

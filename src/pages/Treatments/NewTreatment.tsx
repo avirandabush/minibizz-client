@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useTreatments } from '../../hooks/useTreatments'
-import { TreatmentStatus } from '../../types/types'
+import { TreatmentStatus, TreatmentColor } from '../../types/index'
 // import './NewCustomer.css'
 
 export default function NewTreatment() {
@@ -24,10 +24,13 @@ export default function NewTreatment() {
     setError('')
 
     try {
-      await createTreatment({
+      await createTreatment({ 
         name: name.trim(),
         status: status,
         price: price,
+        durationMinutes: 60,
+        color: TreatmentColor.BLUE,
+        description: '',
       })
 
       navigate('/treatments')

@@ -1,12 +1,11 @@
 import { useEffect, useState } from 'react'
-import { customersApi } from '../service/customers.api'
+import { customersApi,  type CreateCustomerDTO } from '../service/customers.api'
 import { useAuth } from '../app/AuthContext'
-import type { Customer } from '../types/types'
+import type { Customer } from "../types/index"
 
 export function useCustomers() {
     const [customers, setCustomers] = useState<Customer[]>([])
     const [loading, setLoading] = useState(false)
-
     const { user } = useAuth()
 
     const fetchCustomers = async () => {
@@ -19,18 +18,16 @@ export function useCustomers() {
         }
     }
 
-    const createCustomer = async (data: Omit<Customer, 'id' | 'createdAt'>) => {
+    const createCustomer = async (data: CreateCustomerDTO) => {
         const newCustomer = await customersApi.create(data)
         setCustomers(prev => [...prev, newCustomer])
+        return newCustomer
     }
 
-    const updateCustomer = async (data: Partial<Customer> & { id: string }) => {
-        const updated = await customersApi.update(data.id, data)
-
+    const updateCustomer = async (id: string, data: Partial<CreateCustomerDTO>) => {
+        const updated = await customersApi.update(id, data)
         setCustomers(prev =>
-            prev.map(c =>
-                c.id === data.id ? { ...c, ...updated } : c
-            )
+            prev.map(c => c.id === id ? { ...c, ...updated } : c)
         )
     }
 
