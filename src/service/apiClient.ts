@@ -12,19 +12,25 @@ async function request<T>(
   includeUser = false
 ): Promise<T> {
   let finalUrl = `${BASE_URL}${url}`
-  let body = options?.body ? JSON.parse(options.body as string) : undefined
+  let body: any = undefined
 
   const userId = await getUserId()
 
-  // 👉 הוספת userId ל־GET (query param)
+  if (options?.body) {
+    try {
+      body = JSON.parse(options.body as string)
+    } catch {
+      body = options.body
+    }
+  }
+
   if (includeUser && userId && (!options || options.method === 'GET')) {
     const separator = finalUrl.includes('?') ? '&' : '?'
     finalUrl += `${separator}userId=${userId}`
   }
 
-  // 👉 הוספת userId ל־POST / PATCH
-  if (includeUser && userId && body) {
-    body.userId = userId
+  if (includeUser && userId && body && typeof body === 'object') {
+    body = { ...body, userId }
   }
 
   // PRODUCTION:
@@ -39,11 +45,12 @@ async function request<T>(
   // server recognizes user by - token, not by userId in body/query
 
   const res = await fetch(finalUrl, {
+    ...options,
     headers: {
       'Content-Type': 'application/json',
+      ...options?.headers,
     },
-    ...options,
-    body: body ? JSON.stringify(body) : options?.body,
+    body: body ? JSON.stringify(body) : undefined,
   })
 
   if (!res.ok) {

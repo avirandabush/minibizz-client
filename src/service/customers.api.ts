@@ -1,5 +1,7 @@
 import { apiClient } from './apiClient'
-import type { Customer } from '../types/types'
+import type { Customer } from "../types/index"
+
+export type CreateCustomerDTO = Omit<Customer, 'id' | 'userId' | 'createdAt' | 'updatedAt'>;
 
 export const customersApi = {
   getAll: () => apiClient.get<Customer[]>('/customers'),
@@ -7,15 +9,21 @@ export const customersApi = {
   getById: (id: string) =>
     apiClient.get<Customer>(`/customers/${id}`),
 
-  create: (data: Omit<Customer, 'id' | 'createdAt'>) =>
-    apiClient.post<Customer>('/customers', {
+  create: (data: CreateCustomerDTO) => {
+    const now = new Date().toISOString();
+    
+    return apiClient.post<Customer>('/customers', {
       ...data,
-      createdAt: new Date().toISOString(),
+      createdAt: now,
+      updatedAt: now
+    });
+  },
+
+  update: (id: string, data: Partial<CreateCustomerDTO>) =>
+    apiClient.patch<Customer>(`/customers/${id}`, {
+      ...data,
+      updatedAt: new Date().toISOString()
     }),
 
-  update: (id: string, data: Partial<Customer>) =>
-  apiClient.patch<Customer>(`/customers/${id}`, data),
-
-  delete: (id: string) =>
-    apiClient.delete<void>(`/customers/${id}`),
+  delete: (id: string) => apiClient.delete<void>(`/customers/${id}`),
 }
