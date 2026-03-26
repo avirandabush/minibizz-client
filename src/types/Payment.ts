@@ -27,9 +27,9 @@ export type Payment = {
   total: number;
   method: PaymentMethod;
   status: PaymentStatus;
-  referenceNumber: string;
-
   date: string;
+
+  referenceNumber: string;
   createdAt: string;
   updatedAt: string;
 };

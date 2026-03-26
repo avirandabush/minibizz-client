@@ -1,7 +1,8 @@
 import { apiClient } from './apiClient'
 import type { Payment } from "../types/index"
+import { generateReferenceNumber } from '../utils/generators';
 
-export type CreatePaymentDTO = Omit<Payment, 'id' | 'userId' | 'createdAt' | 'updatedAt'>
+export type CreatePaymentDTO = Omit<Payment, 'id' | 'userId' | 'referenceNumber' | 'createdAt' | 'updatedAt'>
 
 export const paymentsApi = {
   getAll: () => apiClient.get<Payment[]>('/payments'),
@@ -11,6 +12,7 @@ export const paymentsApi = {
     
     return apiClient.post<Payment>('/payments', {
       ...data,
+      referenceNumber: generateReferenceNumber(),
       createdAt: now,
       updatedAt: now
     });
@@ -24,3 +26,4 @@ export const paymentsApi = {
 
   delete: (id: string) => apiClient.delete(`/payments/${id}`),
 }
+
