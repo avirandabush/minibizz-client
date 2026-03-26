@@ -1,5 +1,5 @@
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { usePayments } from '../../hooks/usePayments'
 import { useCustomers } from '../../hooks/useCustomers'
@@ -9,6 +9,7 @@ import PaymentListItem from '../../components/ListItem/PaymentListItem'
 import { PaymentStatus, type Payment } from '../../types/index'
 import EmptyState from '../../components/EmptyState/EmptyState'
 import SkeletonList from '../../components/Skeleton/SkeletonList/SkeletonList'
+import './PaymentsPage.css'
 
 export default function PaymentsPage() {
   const { payments, updatePayment, loading } = usePayments()
@@ -17,8 +18,33 @@ export default function PaymentsPage() {
   const navigate = useNavigate()
 
   useEffect(() => {
-    setFilteredItems(payments)
+    const sorted = [...payments].sort((a, b) =>
+      new Date(b.date).getTime() - new Date(a.date).getTime()
+    )
+    setFilteredItems(sorted)
   }, [payments])
+
+  const formatDate = (dateString: string) => {
+    return new Date(dateString).toLocaleDateString('he-IL', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric'
+    });
+  }
+
+  const groupedPayments = useMemo(() => {
+    const groups: { [key: string]: Payment[] } = {};
+
+    filteredItems.forEach(payment => {
+      const dateKey = formatDate(payment.date);
+      if (!groups[dateKey]) {
+        groups[dateKey] = [];
+      }
+      groups[dateKey].push(payment);
+    });
+
+    return groups;
+  }, [filteredItems]);
 
   const getCustomerName = (customerId: string) => {
     return customers.find(c => c.id === customerId)?.name || 'לא ידוע'
@@ -73,6 +99,7 @@ export default function PaymentsPage() {
   const handleAdd = () => {
     navigate('/payments/new')
   }
+
   return (
     <div style={{ margin: '16px' }}>
       <ListToolbar
@@ -94,18 +121,30 @@ export default function PaymentsPage() {
               onAction={handleAdd}
             />
           ) : (
-            <List
-              items={filteredItems}
-              renderItem={(item) => (
-                <PaymentListItem
-                  key={item.id}
-                  item={item}
-                  customerName={getCustomerName(item.customerId)}
-                  onToggle={handleToggle}
-                  onClick={() => navigate(`/payments/${item.id}`)}
-                />
-              )}
-            />
+            <div className="payments-grouped-container">
+              {Object.keys(groupedPayments).map(date => (
+                <div key={date} className="date-group">
+                  <h3 className="date-group-title">
+                    {date}
+                  </h3>
+
+                  <div className="date-group-content">
+                    <List
+                      items={groupedPayments[date]}
+                      renderItem={(item) => (
+                        <PaymentListItem
+                          key={item.id}
+                          item={item}
+                          customerName={getCustomerName(item.customerId)}
+                          onToggle={handleToggle}
+                          onClick={() => navigate(`/payments/${item.id}`)}
+                        />
+                      )}
+                    />
+                  </div>
+                </div>
+              ))}
+            </div>
           )}
         </>
       )}
