@@ -13,31 +13,27 @@
 }
 
 .treatment-card.selected {
-  border-color: #4caf50;
-  background: #f4fff6;
+  border-color: var(--color-secondary);
+  background: var(--color-light);
 }
 
-/* שורה עליונה */
 .treatment-name {
   font-size: 14px;
   font-weight: 500;
   margin-bottom: 6px;
 }
 
-/* שורה תחתונה */
 .treatment-bottom {
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
 
-/* מחיר */
 .price {
   font-size: 13px;
   color: #555;
 }
 
-/* כמות */
 .quantity-control {
   display: flex;
   align-items: center;
