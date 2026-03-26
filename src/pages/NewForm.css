@@ -1,0 +1,79 @@
+.page-container {
+  max-width: 500px;
+  margin: 16px auto;
+  padding: 16px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 12px;
+}
+
+.form-group label {
+  margin-bottom: 4px;
+  font-weight: 500;
+}
+
+.form-group input {
+  padding: 8px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 16px;
+}
+
+.error-text {
+  color: red;
+  margin-top: 8px;
+}
+
+.error {
+  color: red;
+  font-size: 12px;
+}
+
+.form-group-inline {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+textarea {
+  padding: 8px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  min-height: 80px;
+}
+
+.color-picker {
+  display: flex;
+  gap: 8px;
+}
+
+.color {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: none;
+  cursor: pointer;
+  opacity: 0.6;
+}
+
+.color.selected {
+  opacity: 1;
+  outline: 2px solid #000;
+}
+
+/* צבעים */
+.color.BLUE { background: #3b82f6; }
+.color.GREEN { background: #22c55e; }
+.color.ORANGE { background: #f97316; }
+.color.PURPLE { background: #a855f7; }
+.color.RED { background: #ef4444; }
+.color.YELLOW { background: #eab308; }
