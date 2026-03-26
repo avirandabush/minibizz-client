@@ -4,6 +4,7 @@ import { useCustomers } from '../../hooks/useCustomers'
 import { useTreatments } from '../../hooks/useTreatments'
 import { usePayments } from '../../hooks/usePayments'
 import { PaymentMethod, PaymentStatus, TreatmentStatus } from '../../types'
+import TreatmentSelector from '../../components/TreatmentSelector/TreatmentSelector'
 import '../NewForm.css'
 
 type TreatmentSelection = {
@@ -196,27 +197,15 @@ export default function NewPayment() {
           <div className="sub">אין טיפולים פעילים</div>
         )}
 
-        {activeTreatments.map(t => {
-          const selectedItem = selected.find(s => s.treatmentId === t.id)
+        <TreatmentSelector
+          treatments={activeTreatments}
+          selected={selected}
+          onChange={setSelected}
+        />
 
-          return (
-            <div key={t.id} style={{ marginBottom: '8px' }}>
-              <div>{t.name} (₪{t.price})</div>
-
-              <input
-                type="number"
-                min={0}
-                placeholder="כמות"
-                value={selectedItem?.quantity || ''}
-                onChange={e =>
-                  handleQuantityChange(t.id, Number(e.target.value))
-                }
-              />
-            </div>
-          )
-        })}
-
-        {errors.treatments && <span className="error">{errors.treatments}</span>}
+        {errors.treatments && (
+          <span className="error">{errors.treatments}</span>
+        )}
       </div>
 
       {/* סכום */}

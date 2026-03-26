@@ -1,0 +1,66 @@
+.treatment-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 10px;
+}
+
+.treatment-card {
+  border: 1px solid #ddd;
+  border-radius: 12px;
+  padding: 10px;
+  background: #fff;
+  transition: all 0.2s ease;
+}
+
+.treatment-card.selected {
+  border-color: #4caf50;
+  background: #f4fff6;
+}
+
+/* שורה עליונה */
+.treatment-name {
+  font-size: 14px;
+  font-weight: 500;
+  margin-bottom: 6px;
+}
+
+/* שורה תחתונה */
+.treatment-bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* מחיר */
+.price {
+  font-size: 13px;
+  color: #555;
+}
+
+/* כמות */
+.quantity-control {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.quantity-control button {
+  width: 24px;
+  height: 24px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  background: #f9f9f9;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.quantity-control button:hover {
+  background: #eee;
+}
+
+.quantity-control span {
+  min-width: 16px;
+  text-align: center;
+  font-size: 14px;
+}
