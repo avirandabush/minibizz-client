@@ -1,8 +1,16 @@
 import { useAuth } from '../../app/AuthContext'
+import { useTranslation } from 'react-i18next'
 import './SettingPage.css'
 
 export default function SettingsPage() {
   const { user, logout } = useAuth()
+  const { t, i18n } = useTranslation()
+
+  const toggleLanguage = () => {
+    const newLang = i18n.language === 'he' ? 'en' : 'he'
+    i18n.changeLanguage(newLang)
+    localStorage.setItem('i18nextLng', newLang)
+  }
 
   return (
     <div className="settings-page">
@@ -14,6 +22,14 @@ export default function SettingsPage() {
       <div className="settings-content">
         <h3>Welcome</h3>
         <p>{user?.email}!</p>
+
+        <div style={{ margin: '20px 0', padding: '10px' }}>
+          <p>שפה נוכחית: {i18n.language === 'he' ? 'עברית' : 'English'}</p>
+          <button onClick={toggleLanguage}>
+            {i18n.language === 'he' ? 'Switch to English' : 'החלף לעברית'}
+          </button>
+        </div>
+
         <button onClick={logout}>התנתק</button>
       </div>
 

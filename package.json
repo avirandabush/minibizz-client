@@ -13,9 +13,11 @@
   },
   "dependencies": {
     "firebase": "^12.11.0",
+    "i18next": "^26.0.1",
     "json-server": "^1.0.0-beta.13",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
+    "react-i18next": "^17.0.1",
     "react-router-dom": "^7.13.1"
   },
   "devDependencies": {
