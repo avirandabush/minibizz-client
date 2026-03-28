@@ -6,10 +6,12 @@ import CustomerListItem from '../../components/ListItem/CustomerListItem'
 import EmptyState from '../../components/EmptyState/EmptyState'
 import SkeletonList from '../../components/Skeleton/SkeletonList/SkeletonList'
 import { useListManager } from '../../hooks/useListManager'
+import { useTranslation } from 'react-i18next'
 
 export default function CustomersPage() {
   const { customers, loading } = useCustomers()
   const navigate = useNavigate()
+  const { t } = useTranslation()
 
   const {
     processedItems,
@@ -22,9 +24,9 @@ export default function CustomersPage() {
     items: customers,
     searchFields: (c) => [c.name, c.phone || '', c.email || ''],
     sortLogics: {
-      'שם א-ת': (a, b) => a.name.localeCompare(b.name),
-      'שם ת-א': (a, b) => b.name.localeCompare(a.name),
-      'חדש ביותר': (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+      [t('customers.sort.nameAsc')]: (a, b) => a.name.localeCompare(b.name),
+      [t('customers.sort.nameDesc')]: (a, b) => b.name.localeCompare(a.name),
+      [t('customers.sort.newest')]: (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
     },
     filterLogics: {
       'כל הלקוחות': (items) => items,

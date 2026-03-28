@@ -24,7 +24,7 @@ export default function SettingsPage() {
         <p>{user?.email}!</p>
 
         <div style={{ margin: '20px 0', padding: '10px' }}>
-          <p>שפה נוכחית: {i18n.language === 'he' ? 'עברית' : 'English'}</p>
+          <p> {t('settings.language.current')} {i18n.language === 'he' ? t('settings.language.hebrew') : 'English'}</p>
           <button onClick={toggleLanguage}>
             {i18n.language === 'he' ? 'Switch to English' : 'החלף לעברית'}
           </button>

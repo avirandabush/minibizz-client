@@ -1,3 +1,22 @@
 {
-
+  "customers": {
+    "sort": {
+      "nameAsc": "שם א-ת",
+      "nameDesc": "שם ת-א",
+      "newest": "חדש ביותר"
+    },
+    "filter": {
+      "all": "כל הלקוחות",
+      "active": "לקוחות פעילים",
+      "inactive": "לא פעילים",
+      "recent": "נוספו לאחרונה"
+    }
+  },
+  "settings": {
+    "language": {
+      "english": "אנגלית",
+      "hebrew": "עברית",
+      "current": "שפה נוכחית:"
+    }
+  }
 }

@@ -1,3 +1,22 @@
 {
-
+  "customers": {
+    "sort": {
+      "nameAsc": "Name A-Z",
+      "nameDesc": "Name Z-A",
+      "newest": "Newest First"
+    },
+    "filter": {
+      "all": "All Customers",
+      "active": "Active Customers",
+      "inactive": "Inactive Customers",
+      "recent": "Recently Added"
+    }
+  },
+  "settings": {
+    "language": {
+      "english": "english",
+      "hebrew": "hebrew",
+      "current": "Current Language:"
+    }
+  }
 }
