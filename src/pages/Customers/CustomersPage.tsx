@@ -1,4 +1,3 @@
-import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useCustomers } from '../../hooks/useCustomers'
 import ListToolbar from '../../components/ListToolbar/ListToolbar'
@@ -6,44 +5,37 @@ import List from '../../components/List/List'
 import CustomerListItem from '../../components/ListItem/CustomerListItem'
 import EmptyState from '../../components/EmptyState/EmptyState'
 import SkeletonList from '../../components/Skeleton/SkeletonList/SkeletonList'
+import { useListManager } from '../../hooks/useListManager'
 
 export default function CustomersPage() {
   const { customers, loading } = useCustomers()
-  const [filteredItems, setFilteredItems] = useState(customers)
   const navigate = useNavigate()
 
-  useEffect(() => {
-    setFilteredItems(customers)
-  }, [customers])
-
-  const handleSearch = (text: string) => {
-    const value = text.toLowerCase()
-
-    setFilteredItems(
-      customers.filter((c): boolean =>
-        c.name.toLowerCase().includes(value) ||
-        (c.phone ?? '').includes(value)
-      )
-    )
-  }
-
-  const handleSort = (option: string) => {
-    const sorted = [...filteredItems].sort((a, b) =>
-      option === 'שם א-ת'
-        ? a.name.localeCompare(b.name)
-        : b.name.localeCompare(a.name)
-    )
-
-    setFilteredItems(sorted)
-  }
-
-  const handleFilter = (option: string) => {
-    if (option === 'לקוחות חדשים') {
-      setFilteredItems(customers.slice(-5))
-    } else {
-      setFilteredItems(customers)
-    }
-  }
+  const {
+    processedItems,
+    setSearchTerm,
+    setActiveSort,
+    setActiveFilter,
+    sortOptions,
+    filterOptions
+  } = useListManager({
+    items: customers,
+    searchFields: (c) => [c.name, c.phone || '', c.email || ''],
+    sortLogics: {
+      'שם א-ת': (a, b) => a.name.localeCompare(b.name),
+      'שם ת-א': (a, b) => b.name.localeCompare(a.name),
+      'חדש ביותר': (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+    },
+    filterLogics: {
+      'כל הלקוחות': (items) => items,
+      'לקוחות פעילים': (items) => items.filter(c => c.isActive),
+      'לא פעילים': (items) => items.filter(c => !c.isActive),
+      'נוספו לאחרונה': (items) => [...items].sort((a, b) =>
+        new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+      ).slice(0, 10),
+    },
+    defaultSort: 'שם א-ת'
+  })
 
   const handleAdd = () => {
     navigate('/customers/new')
@@ -52,17 +44,20 @@ export default function CustomersPage() {
   return (
     <div style={{ margin: '16px' }}>
       <ListToolbar
-        onSearch={handleSearch}
-        onSort={handleSort}
-        onFilter={handleFilter}
+        onSearch={setSearchTerm}
+        onSort={setActiveSort}
+        onFilter={setActiveFilter}
+        sortOptions={sortOptions}
+        filterOptions={filterOptions}
         onAdd={handleAdd}
+        placeholder="חפש שם או טלפון..."
       />
 
       {loading ? (
         <SkeletonList />
       ) : (
         <>
-          {filteredItems.length === 0 ? (
+          {processedItems.length === 0 ? (
             <EmptyState
               title="אין לקוחות"
               subtitle="הוסף לקוח חדש כדי להתחיל"
@@ -71,7 +66,7 @@ export default function CustomersPage() {
             />
           ) : (
             <List
-              items={filteredItems}
+              items={processedItems}
               renderItem={(item) => (
                 <CustomerListItem
                   key={item.id}

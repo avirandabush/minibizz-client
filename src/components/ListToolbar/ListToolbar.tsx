@@ -2,21 +2,21 @@ import { useState, useEffect, useRef } from 'react'
 import Menu from './ListToolbarMenu'
 import './ListToolbar.css'
 
-type Props = {
+type ListToolbarProps = {
+    placeholder?: string
+    sortOptions: string[]
+    filterOptions: string[]
     onSearch: (text: string) => void
     onSort: (option: string) => void
     onFilter: (option: string) => void
     onAdd: () => void
 }
 
-export default function ListToolbar({ onSearch, onSort, onFilter, onAdd }: Props) {
+export default function ListToolbar({ placeholder, sortOptions, filterOptions, onSearch, onSort, onFilter, onAdd }: ListToolbarProps) {
     const [sortOpen, setSortOpen] = useState(false)
     const [filterOpen, setFilterOpen] = useState(false)
     const [searchText, setSearchText] = useState('')
     const toolbarRef = useRef<HTMLDivElement>(null)
-
-    const sortOptions = ['שם א-ת', 'שם ת-א']
-    const filterOptions = ['לקוחות חדשים', 'לקוחות ותיקים']
 
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
@@ -34,16 +34,13 @@ export default function ListToolbar({ onSearch, onSort, onFilter, onAdd }: Props
     return (
         <div className='list-toolbar-wrapper' ref={toolbarRef}>
             <div className="list-toolbar-container">
-
-                {/* צד ימין */}
                 <div className="toolbar-right">
-                    <button onClick={onAdd}>+ New</button>
+                    <button className="add-btn" onClick={onAdd}>+ חדש</button>
                 </div>
-                
-                {/* צד שמאל */}
+
                 <div className="toolbar-left">
-                    <div style={{ position: 'relative' }}>
-                        <button onClick={() => setFilterOpen(!filterOpen)}>Filter</button>
+                    <div className="menu-anchor">
+                        <button onClick={() => setFilterOpen(!filterOpen)}>סינון</button>
                         <Menu
                             options={filterOptions}
                             isOpen={filterOpen}
@@ -52,8 +49,8 @@ export default function ListToolbar({ onSearch, onSort, onFilter, onAdd }: Props
                         />
                     </div>
 
-                    <div style={{ position: 'relative' }}>
-                        <button onClick={() => setSortOpen(!sortOpen)}>Sort</button>
+                    <div className="menu-anchor">
+                        <button onClick={() => setSortOpen(!sortOpen)}>מיון</button>
                         <Menu
                             options={sortOptions}
                             isOpen={sortOpen}
@@ -64,11 +61,10 @@ export default function ListToolbar({ onSearch, onSort, onFilter, onAdd }: Props
                 </div>
             </div>
 
-            {/* שורת חיפוש */}
             <div className="search-row">
                 <input
                     type="text"
-                    placeholder="חפש..."
+                    placeholder={placeholder || 'חפש...'}
                     value={searchText}
                     onChange={e => {
                         setSearchText(e.target.value)

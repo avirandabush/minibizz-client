@@ -1,4 +1,3 @@
-import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import ListToolbar from '../../components/ListToolbar/ListToolbar'
 import List from '../../components/List/List'
@@ -7,44 +6,34 @@ import TreatmentListItem from '../../components/ListItem/TreatmentListItem'
 import { TreatmentStatus, type Treatment } from '../../types/index'
 import EmptyState from '../../components/EmptyState/EmptyState'
 import SkeletonList from '../../components/Skeleton/SkeletonList/SkeletonList'
+import { useListManager } from '../../hooks/useListManager'
 
 export default function TreatmentsPage() {
   const { treatments, updateTreatment, loading } = useTreatments()
-  const [filteredItems, setFilteredItems] = useState(treatments)
   const navigate = useNavigate()
 
-  useEffect(() => {
-    setFilteredItems(treatments)
-  }, [treatments])
-
-  const handleSearch = (text: string) => {
-    const value = text.toLowerCase()
-
-    setFilteredItems(
-      treatments.filter(c =>
-        c.name.toLowerCase().includes(value) ||
-        (c.status ?? '') === value
-      )
-    )
-  }
-
-  const handleSort = (option: string) => {
-    const sorted = [...filteredItems].sort((a, b) =>
-      option === 'שם א-ת'
-        ? a.name.localeCompare(b.name)
-        : b.name.localeCompare(a.name)
-    )
-
-    setFilteredItems(sorted)
-  }
-
-  const handleFilter = (option: string) => {
-    if (option === 'לקוחות חדשים') {
-      setFilteredItems(treatments.slice(-5))
-    } else {
-      setFilteredItems(treatments)
-    }
-  }
+  const {
+    processedItems,
+    setSearchTerm,
+    setActiveSort,
+    setActiveFilter,
+    sortOptions,
+    filterOptions
+  } = useListManager({
+    items: treatments,
+    searchFields: (t) => [t.name],
+    sortLogics: {
+      'שם א-ת': (a, b) => a.name.localeCompare(b.name),
+      'מחיר: נמוך לגבוה': (a, b) => a.price - b.price,
+      'מחיר: גבוה לנמוך': (a, b) => b.price - a.price,
+    },
+    filterLogics: {
+      'כל הטיפולים': (items) => items,
+      'פעילים בלבד': (items) => items.filter(t => t.status === TreatmentStatus.ACTIVE),
+      'לא פעילים': (items) => items.filter(t => t.status === TreatmentStatus.INACTIVE),
+    },
+    defaultSort: 'שם א-ת'
+  })
 
   const handleToggle = async (t: Treatment) => {
     const newStatus = t.status === TreatmentStatus.ACTIVE
@@ -63,17 +52,20 @@ export default function TreatmentsPage() {
   return (
     <div style={{ margin: '16px' }}>
       <ListToolbar
-        onSearch={handleSearch}
-        onSort={handleSort}
-        onFilter={handleFilter}
+        onSearch={setSearchTerm}
+        onSort={setActiveSort}
+        onFilter={setActiveFilter}
+        sortOptions={sortOptions}
+        filterOptions={filterOptions}
         onAdd={handleAdd}
+        placeholder="חפש שם טיפול..."
       />
 
       {loading ? (
         <SkeletonList />
       ) : (
         <>
-          {filteredItems.length === 0 ? (
+          {processedItems.length === 0 ? (
             <EmptyState
               title="אין טיפולים"
               subtitle="הוסף טיפול חדש כדי להתחיל"
@@ -82,7 +74,7 @@ export default function TreatmentsPage() {
             />
           ) : (
             <List
-              items={filteredItems}
+              items={processedItems}
               renderItem={(item) => (
                 <TreatmentListItem
                   key={item.id}

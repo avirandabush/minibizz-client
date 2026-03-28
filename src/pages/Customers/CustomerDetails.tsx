@@ -83,6 +83,7 @@ export default function CustomerDetails() {
         <>
           <DetailsRow label="שם" value={customer.name} />
           <DetailsRow label="טלפון" value={customer.phone || '-'} />
+          <DetailsRow label="אימייל" value={customer.email || '-'} />
           <DetailsRow
             label="נוצר בתאריך"
             value={new Date(customer.createdAt).toLocaleDateString('he-IL')}
