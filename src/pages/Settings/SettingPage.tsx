@@ -15,6 +15,7 @@ export default function SettingsPage() {
   return (
     <div className="settings-page">
       <div className="settings-header">
+        <img src="/MiniBizz_Logo.svg" alt="MiniBizz Logo" className="settings-logo" />
         <h1>MiniBizz</h1>
         <h2>Manage your business settings</h2>
       </div>

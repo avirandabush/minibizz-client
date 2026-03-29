@@ -13,6 +13,11 @@
     margin-top: 24px;
 }
 
+.settings-logo {
+    width: 80px;
+    height: 80px;
+}
+
 .settings-header h1 {
     font-size: 28px;
     font-weight: 800;
