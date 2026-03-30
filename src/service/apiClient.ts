@@ -2,8 +2,16 @@ import { auth } from '../lib/firebase'
 
 const BASE_URL = 'http://localhost:3000'
 
-async function getUserId() {
-  return auth.currentUser?.uid
+async function getAuthToken() {
+  const user = auth.currentUser
+  if (!user) return null
+
+  try {
+    return await user.getIdToken(false)
+  } catch (error) {
+    console.error("Error getting Firebase token:", error)
+    return null
+  }
 }
 
 async function request<T>(
@@ -12,53 +20,33 @@ async function request<T>(
   includeUser = false
 ): Promise<T> {
   let finalUrl = `${BASE_URL}${url}`
-  let body: any = undefined
 
-  const userId = await getUserId()
+  const headers = new Headers(options?.headers)
+  headers.set('Content-Type', 'application/json')
 
-  if (options?.body) {
-    try {
-      body = JSON.parse(options.body as string)
-    } catch {
-      body = options.body
+  if (includeUser) {
+    const token = await getAuthToken()
+    if (token) {
+      headers.set('Authorization', `Bearer ${token}`)
     }
   }
 
-  if (includeUser && userId && (!options || options.method === 'GET')) {
-    const separator = finalUrl.includes('?') ? '&' : '?'
-    finalUrl += `${separator}userId=${userId}`
-  }
-
-  if (includeUser && userId && body && typeof body === 'object') {
-    body = { ...body, userId }
-  }
-
-  // PRODUCTION:
-  // instead of userId in - query/body,
-  // we send Firebase token:
-  //
-  // const token = await auth.currentUser?.getIdToken()
-  // headers: {
-  //   Authorization: `Bearer ${token}`
-  // }
-  //
-  // server recognizes user by - token, not by userId in body/query
-
   const res = await fetch(finalUrl, {
     ...options,
-    headers: {
-      'Content-Type': 'application/json',
-      ...options?.headers,
-    },
-    body: body ? JSON.stringify(body) : undefined,
+    headers,
   })
 
   if (!res.ok) {
     const text = await res.text()
-    throw new Error(text || 'API Error')
+    throw new Error(text || `API Error {res.status}`)
   }
 
-  return res.json()
+  const contentType = res.headers.get('content-type')
+  if (contentType && contentType.includes('application/json')) {
+    return res.json()
+  }
+
+  return {} as T
 }
 
 export const apiClient = {
