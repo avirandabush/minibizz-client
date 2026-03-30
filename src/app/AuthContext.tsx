@@ -1,5 +1,7 @@
 import { createContext, useContext, useEffect, useState } from 'react'
+import { usersApi } from '../service/users.api'
 import { auth } from '../lib/firebase'
+import { DealerType, UserPlan, UserStatus } from '../types'
 import {
   onAuthStateChanged,
   signInWithEmailAndPassword,
@@ -36,7 +38,32 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }
 
   const register = async (email: string, password: string) => {
-    await createUserWithEmailAndPassword(auth, email, password)
+    const cred = await createUserWithEmailAndPassword(auth, email, password)
+
+    const firebaseUser = cred.user
+
+    await usersApi.create({
+      authId: firebaseUser.uid,
+      name: '',
+      contact: {
+        email,
+        phone: '',
+      },
+      business: {
+        name: '',
+        legalName: '',
+        dealerNo: '',
+        dealerType: DealerType.EXEMPT,
+        professionalField: '',
+        address: '',
+      },
+      preferences: {
+        language: 'he',
+        darkMode: false,
+      },
+      plan: UserPlan.SILVER,
+      status: UserStatus.ACTIVE,
+    })
   }
 
   const logout = async () => {
