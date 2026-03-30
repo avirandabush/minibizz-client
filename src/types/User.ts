@@ -4,12 +4,12 @@ export const AppLanguage = {
 } as const;
 export type AppLanguage = (typeof AppLanguage)[keyof typeof AppLanguage];
 
-export const dealerType = {
+export const DealerType = {
   EXEMPT: 'EXEMPT',
   LICENSED: 'LICENSED',
   COMPANY: 'COMPANY',
 } as const;
-export type DealerType = (typeof dealerType)[keyof typeof dealerType];
+export type DealerType = (typeof DealerType)[keyof typeof DealerType];
 
 export type ContactDetails = {
   email: string;
