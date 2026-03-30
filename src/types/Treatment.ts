@@ -1,9 +1,3 @@
-export const TreatmentStatus = {
-  ACTIVE: 'ACTIVE',
-  INACTIVE: 'INACTIVE',
-} as const;
-export type TreatmentStatus = (typeof TreatmentStatus)[keyof typeof TreatmentStatus];
-
 export const TreatmentColor = {
   BLUE: 'BLUE',
   GREEN: 'GREEN',
@@ -11,19 +5,28 @@ export const TreatmentColor = {
   PURPLE: 'PURPLE',
   RED: 'RED',
   YELLOW: 'YELLOW',
+  GRAY: 'GRAY',
+  PINK: 'PINK',
 } as const;
 export type TreatmentColor = (typeof TreatmentColor)[keyof typeof TreatmentColor];
+
+export type TreatmentSpecs = {
+  price: number;
+  durationMinutes: number;
+  bufferMinutes?: number;
+};
 
 export type Treatment = {
   id: string;
   userId: string;
 
   name: string;
-  status: TreatmentStatus;
-  price: number;
-  durationMinutes: number;
-  color: TreatmentColor;
   description: string;
+
+  isFavorite?: boolean;
+  isActive?: boolean;
+  specs: TreatmentSpecs;
+  color: TreatmentColor;
 
   createdAt: string;
   updatedAt: string;
