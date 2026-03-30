@@ -8,6 +8,7 @@
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
+    "type-check": "tsc --noEmit",
     "server": "json-server --watch db.json --port 3000",
     "start": "concurrently \"npm run server\" \"npm run dev\""
   },
