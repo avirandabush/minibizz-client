@@ -19,7 +19,7 @@ export default function TreatmentDetails() {
   useEffect(() => {
     if (treatment) {
       setName(treatment.name)
-      setPrice(treatment.price)
+      setPrice(treatment.specs.price)
     }
   }, [treatment])
 
@@ -36,7 +36,10 @@ export default function TreatmentDetails() {
     try {
       await updateTreatment(treatment.id, {
         name: name.trim(),
-        price: price
+        specs: {
+          price,
+          durationMinutes: 0
+        }
       })
 
       setIsEditing(false)
@@ -47,7 +50,7 @@ export default function TreatmentDetails() {
 
   const handleCancel = () => {
     setName(treatment.name)
-    setPrice(treatment.price)
+    setPrice(treatment.specs.price)
     setIsEditing(false)
   }
 
@@ -82,7 +85,7 @@ export default function TreatmentDetails() {
       {!isEditing ? (
         <>
           <DetailsRow label="שם" value={treatment.name} />
-          <DetailsRow label="מחיר" value={treatment.price.toFixed(2)} />
+          <DetailsRow label="מחיר" value={treatment.specs.price.toFixed(2)} />
           <DetailsRow
             label="נוצר בתאריך"
             value={new Date(treatment.createdAt).toLocaleDateString('he-IL')}

@@ -1,10 +1,5 @@
+import type { Treatment } from '../../types'
 import './TreatmentSelector.css'
-
-type Treatment = {
-  id: string
-  name: string
-  price: number
-}
 
 type Selection = {
   treatmentId: string
@@ -57,15 +52,9 @@ export default function TreatmentSelector({
             key={t.id}
             className={`treatment-card ${isSelected ? 'selected' : ''}`}
           >
-            {/* שורה 1 - שם */}
             <div className="treatment-name">{t.name}</div>
-
-            {/* שורה 2 */}
             <div className="treatment-bottom">
-              {/* מחיר */}
-              <div className="price">₪{t.price}</div>
-
-              {/* כמות */}
+              <div className="price">₪{t.specs.price}</div>
               <div className="quantity-control">
                 <button
                   type="button"

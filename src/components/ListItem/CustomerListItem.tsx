@@ -15,8 +15,8 @@ export default function CustomerListItem({ item, onClick }: Props) {
   return (
     <BaseListItem onClick={onClick}>
       <div className="item-right">
-        <div>{item.name}</div>
-        <div className="sub">{item.phone}</div>
+        <div>{item.personal.name}</div>
+        <div className="sub">{item.contact.phone}</div>
       </div>
 
       <div className="item-left">

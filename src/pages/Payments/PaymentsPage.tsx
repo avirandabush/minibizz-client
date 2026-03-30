@@ -27,13 +27,13 @@ export default function PaymentsPage() {
   } = useListManager({
     items: payments,
     searchFields: (p) => [
-      customers.find(c => c.id === p.customerId)?.name || '',
+      customers.find(c => c.id === p.customerId)?.personal.name || '',
       p.referenceNumber || '',
-      (p.treatments || []).map(t => t.name).join(' '),
+      (p.items || []).map(t => t.name).join(' '),
     ],
     sortLogics: {
       'תאריך חדש-ישן': (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
-      'סכום גבוה-נמוך': (a, b) => b.amount - a.amount,
+      'סכום גבוה-נמוך': (a, b) => b.summary.subtotal - a.summary.subtotal,
     },
     filterLogics: {
       'הכל': (items) => items,
@@ -66,7 +66,7 @@ export default function PaymentsPage() {
   }, [processedItems]);
 
   const getCustomerName = (customerId: string) => {
-    return customers.find(c => c.id === customerId)?.name || 'לא ידוע'
+    return customers.find(c => c.id === customerId)?.personal.name || 'לא ידוע'
   }
 
   const handleToggle = async (p: Payment) => {

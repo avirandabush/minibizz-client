@@ -18,8 +18,8 @@ export default function CustomerDetails() {
 
   useEffect(() => {
     if (customer) {
-      setName(customer.name)
-      setPhone(customer.phone || '')
+      setName(customer.personal.name)
+      setPhone(customer.contact.phone || '')
     }
   }, [customer])
 
@@ -35,8 +35,12 @@ export default function CustomerDetails() {
 
     try {
       await updateCustomer(customer.id, {
-        name: name.trim(),
-        phone: phone.trim(),
+        personal: {
+          name: name.trim()
+        },
+        contact: {
+          phone: phone.trim()
+        }
       })
 
       setIsEditing(false)
@@ -46,8 +50,8 @@ export default function CustomerDetails() {
   }
 
   const handleCancel = () => {
-    setName(customer.name)
-    setPhone(customer.phone || '')
+    setName(customer.personal.name)
+    setPhone(customer.contact.phone || '')
     setIsEditing(false)
   }
 
@@ -81,9 +85,9 @@ export default function CustomerDetails() {
     >
       {!isEditing ? (
         <>
-          <DetailsRow label="שם" value={customer.name} />
-          <DetailsRow label="טלפון" value={customer.phone || '-'} />
-          <DetailsRow label="אימייל" value={customer.email || '-'} />
+          <DetailsRow label="שם" value={customer.personal.name} />
+          <DetailsRow label="טלפון" value={customer.contact.phone || '-'} />
+          <DetailsRow label="אימייל" value={customer.contact.email || '-'} />
           <DetailsRow
             label="נוצר בתאריך"
             value={new Date(customer.createdAt).toLocaleDateString('he-IL')}

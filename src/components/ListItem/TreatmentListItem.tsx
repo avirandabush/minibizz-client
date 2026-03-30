@@ -1,4 +1,4 @@
-import { TreatmentStatus, type Treatment } from '../../types/index'
+import { type Treatment } from '../../types/index'
 import BaseListItem from './BaseListItem'
 
 type Props = {
@@ -17,20 +17,20 @@ export default function TreatmentListItem({ item, onToggle, onClick }: Props) {
         <BaseListItem onClick={onClick}>
             <div className="item-right">
                 <div>{item.name}</div>
-                <div className="sub">₪{item.price}</div>
+                <div className="sub">₪{item.specs.price}</div>
             </div>
 
             <div className="item-left">
                 <div className="sub">{date}</div>
 
                 <div
-                    className={`status ${item.status === TreatmentStatus.ACTIVE ? 'active' : 'inactive'}`}
+                    className={`status ${item.isActive === true ? 'active' : 'inactive'}`}
                     onClick={(e) => {
                         e.stopPropagation()
                         onToggle(item)
                     }}
                 >
-                    {item.status === TreatmentStatus.ACTIVE ? 'פעיל' : 'לא פעיל'}
+                    {item.isActive === true ? 'פעיל' : 'לא פעיל'}
                 </div>
             </div>
         </BaseListItem>

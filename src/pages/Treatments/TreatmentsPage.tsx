@@ -3,7 +3,7 @@ import ListToolbar from '../../components/ListToolbar/ListToolbar'
 import List from '../../components/List/List'
 import { useTreatments } from '../../hooks/useTreatments'
 import TreatmentListItem from '../../components/ListItem/TreatmentListItem'
-import { TreatmentStatus, type Treatment } from '../../types/index'
+import { type Treatment } from '../../types/index'
 import EmptyState from '../../components/EmptyState/EmptyState'
 import SkeletonList from '../../components/Skeleton/SkeletonList/SkeletonList'
 import { useListManager } from '../../hooks/useListManager'
@@ -24,24 +24,22 @@ export default function TreatmentsPage() {
     searchFields: (t) => [t.name],
     sortLogics: {
       'שם א-ת': (a, b) => a.name.localeCompare(b.name),
-      'מחיר: נמוך לגבוה': (a, b) => a.price - b.price,
-      'מחיר: גבוה לנמוך': (a, b) => b.price - a.price,
+      'מחיר: נמוך לגבוה': (a, b) => a.specs.price - b.specs.price,
+      'מחיר: גבוה לנמוך': (a, b) => b.specs.price - a.specs.price,
     },
     filterLogics: {
       'כל הטיפולים': (items) => items,
-      'פעילים בלבד': (items) => items.filter(t => t.status === TreatmentStatus.ACTIVE),
-      'לא פעילים': (items) => items.filter(t => t.status === TreatmentStatus.INACTIVE),
+      'פעילים בלבד': (items) => items.filter(t => t.isActive === true),
+      'לא פעילים': (items) => items.filter(t => t.isActive === false),
     },
     defaultSort: 'שם א-ת'
   })
 
   const handleToggle = async (t: Treatment) => {
-    const newStatus = t.status === TreatmentStatus.ACTIVE
-      ? TreatmentStatus.INACTIVE
-      : TreatmentStatus.ACTIVE
+    const status = t.isActive === true ? false : true
 
     await updateTreatment(t.id, {
-      status: newStatus
+      isActive: status
     })
   }
 

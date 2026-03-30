@@ -11,10 +11,12 @@ export default function NewCustomer() {
   const [form, setForm] = useState({
     name: '',
     phone: '',
+    alternatePhone: '',
     email: '',
     birthDate: '',
     address: '',
     notes: '',
+    medicalNotes: '',
     leadSource: LeadSource.FRIEND,
     isActive: true,
   })
@@ -57,12 +59,23 @@ export default function NewCustomer() {
 
     try {
       await createCustomer({
-        name: form.name.trim(),
-        phone: form.phone.trim(),
-        email: form.email.trim().toLowerCase(),
-        birthDate: form.birthDate,
-        address: form.address.trim(),
-        notes: form.notes.trim(),
+        personal: {
+          name: form.name.trim(),
+          birthDate: form.birthDate || undefined,
+          notes: form.notes.trim(),
+          medicalNotes: form.medicalNotes.trim(),
+        },
+        contact: {
+          phone: form.phone.trim(),
+          alternatePhone: form.alternatePhone.trim(),
+          email: form.email.trim().toLowerCase(),
+          address: form.address.trim(),
+        },
+        stats: {
+          totalVisits: 0,
+          totalSpent: 0,
+          averageTicket: 0
+        },
         leadSource: form.leadSource,
         isActive: form.isActive,
       })

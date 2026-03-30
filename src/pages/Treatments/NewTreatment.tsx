@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useTreatments } from '../../hooks/useTreatments'
-import { TreatmentStatus, TreatmentColor } from '../../types'
+import { TreatmentColor } from '../../types'
 import '../NewForm.css'
 
 export default function NewTreatment() {
@@ -12,8 +12,10 @@ export default function NewTreatment() {
     name: '',
     price: '',
     durationMinutes: 60,
-    status: TreatmentStatus.ACTIVE,
-    color: TreatmentColor.BLUE,
+    bufferMinutes: 15,
+    isActive: true,
+    isFavorite: false,
+    color: TreatmentColor.PINK,
     description: '',
   })
 
@@ -48,11 +50,15 @@ export default function NewTreatment() {
     try {
       await createTreatment({
         name: form.name.trim(),
-        price: Number(form.price),
-        durationMinutes: form.durationMinutes,
-        status: form.status,
-        color: form.color,
         description: form.description.trim(),
+        isActive: form.isActive,
+        isFavorite: form.isFavorite,
+        color: form.color,
+        specs: {
+          price: Number(form.price),
+          durationMinutes: form.durationMinutes,
+          bufferMinutes: form.bufferMinutes,
+        },
       })
 
       navigate('/treatments')
@@ -112,11 +118,11 @@ export default function NewTreatment() {
       <div className="form-group">
         <label>סטטוס</label>
         <select
-          value={form.status}
-          onChange={e => updateField('status', e.target.value)}
+          value={form.isActive === true ? 'true' : 'false'}
+          onChange={e => updateField('isActive', e.target.value === 'true')}
         >
-          <option value={TreatmentStatus.ACTIVE}>פעיל</option>
-          <option value={TreatmentStatus.INACTIVE}>לא פעיל</option>
+          <option value={true ? 'true' : 'false'}>פעיל</option>
+          <option value={false ? 'false' : 'true'}>לא פעיל</option>
         </select>
       </div>
 

@@ -21,7 +21,7 @@ export default function PaymentDetailsPage() {
 
   useEffect(() => {
     if (payment) {
-      setName(payment.amount.toString())
+      setName(payment.summary.subtotal.toString())
       setPhone(payment.customerId || '')
     }
   }, [payment])
@@ -32,7 +32,7 @@ export default function PaymentDetailsPage() {
   const isValid = name.trim().length > 0
 
   const getCustomerName = (customerId: string) => {
-    return customers.find(c => c.id === customerId)?.name || 'לא ידוע'
+    return customers.find(c => c.id === customerId)?.personal.name || 'לא ידוע'
   }
 
   const handleSave = async () => {
@@ -42,7 +42,11 @@ export default function PaymentDetailsPage() {
 
     try {
       await updatePayment(payment.id, {
-        amount: parseFloat(name),
+        summary: {
+          subtotal: parseFloat(name),
+          discount: payment.summary.discount,
+          total: parseFloat(name) - payment.summary.discount,
+        },
         customerId: phone.trim()
       })
 
@@ -53,7 +57,7 @@ export default function PaymentDetailsPage() {
   }
 
   const handleCancel = () => {
-    setName(payment.amount.toString())
+    setName(payment.summary.subtotal.toString())
     setPhone(payment.customerId || '')
     setIsEditing(false)
   }
@@ -89,7 +93,7 @@ export default function PaymentDetailsPage() {
       {!isEditing ? (
         <>
           <DetailsRow label="לקוח" value={getCustomerName(payment.customerId)} />
-          <DetailsRow label="סכום" value={payment.amount.toFixed(2)} />
+          <DetailsRow label="סכום" value={payment.summary.subtotal.toFixed(2)} />
           <DetailsRow
             label="נוצר בתאריך"
             value={new Date(payment.date).toLocaleDateString('he-IL')}

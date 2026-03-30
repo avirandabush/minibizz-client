@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { useCustomers } from '../../hooks/useCustomers'
 import { useTreatments } from '../../hooks/useTreatments'
 import { usePayments } from '../../hooks/usePayments'
-import { PaymentMethod, PaymentStatus, TreatmentStatus } from '../../types'
+import { PaymentMethod, PaymentStatus, type PaymentTreatmentLine } from '../../types'
 import TreatmentSelector from '../../components/TreatmentSelector/TreatmentSelector'
 import '../NewForm.css'
 
@@ -14,13 +14,12 @@ type TreatmentSelection = {
 
 export default function NewPayment() {
   const navigate = useNavigate()
-
   const { customers } = useCustomers()
   const { treatments } = useTreatments()
   const { createPayment } = usePayments()
 
   const activeTreatments = treatments.filter(
-    t => t.status === TreatmentStatus.ACTIVE
+    t => t.isActive === true
   )
 
   const [form, setForm] = useState({
@@ -31,13 +30,8 @@ export default function NewPayment() {
   })
 
   const [selected, setSelected] = useState<TreatmentSelection[]>([])
-
   const [errors, setErrors] = useState<Record<string, string>>({})
   const [loading, setLoading] = useState(false)
-
-  // ====================
-  // helpers
-  // ====================
 
   const updateField = (field: string, value: any) => {
     setForm(prev => ({ ...prev, [field]: value }))
@@ -63,23 +57,15 @@ export default function NewPayment() {
     })
   }
 
-  // ====================
-  // calculations
-  // ====================
-
-  const amount = useMemo(() => {
+  const subtotal = useMemo(() => {
     return selected.reduce((sum, sel) => {
-      const t = activeTreatments.find(t => t.id === sel.treatmentId)
+      const t = activeTreatments.find(item => item.id === sel.treatmentId)
       if (!t) return sum
-      return sum + t.price * sel.quantity
+      return sum + (t.specs.price * sel.quantity)
     }, 0)
   }, [selected, activeTreatments])
 
-  const total = Math.max(amount - form.discount, 0)
-
-  // ====================
-  // validation
-  // ====================
+  const total = Math.max(subtotal - form.discount, 0)
 
   const validate = () => {
     const newErrors: Record<string, string> = {}
@@ -100,7 +86,7 @@ export default function NewPayment() {
       newErrors.discount = 'לא יכול להיות שלילי'
     }
 
-    if (form.discount > amount) {
+    if (form.discount > subtotal) {
       newErrors.discount = 'לא יכול להיות גדול מהסכום'
     }
 
@@ -113,32 +99,30 @@ export default function NewPayment() {
     return Object.keys(newErrors).length === 0
   }
 
-  // ====================
-  // submit
-  // ====================
-
   const handleSave = async () => {
     if (!validate()) return
 
     setLoading(true)
 
     try {
-      const treatmentsPayload = selected.map(sel => {
-        const t = activeTreatments.find(t => t.id === sel.treatmentId)!
-
+      const items: PaymentTreatmentLine[] = selected.map(sel => {
+        const t = activeTreatments.find(item => item.id === sel.treatmentId)!
         return {
           treatmentId: t.id,
           name: t.name,
-          price: t.price * sel.quantity,
+          price: t.specs.price,
+          quantity: sel.quantity
         }
       })
 
       await createPayment({
         customerId: form.customerId,
-        treatments: treatmentsPayload,
-        amount,
-        discount: form.discount,
-        total,
+        items,
+        summary: {
+          subtotal,
+          discount: form.discount,
+          total
+        },
         method: form.method,
         status: PaymentStatus.PENDING,
         date: new Date(form.date).toISOString(),
@@ -151,10 +135,6 @@ export default function NewPayment() {
       setLoading(false)
     }
   }
-
-  // ====================
-  // UI
-  // ====================
 
   return (
     <div className="page-container">
@@ -170,7 +150,7 @@ export default function NewPayment() {
           <option value="">בחר לקוח</option>
           {customers.map(c => (
             <option key={c.id} value={c.id}>
-              {c.name}
+              {c.personal.name}
             </option>
           ))}
         </select>
@@ -211,7 +191,7 @@ export default function NewPayment() {
       {/* סכום */}
       <div className="form-group">
         <label>סכום</label>
-        <input type="number" value={amount} readOnly />
+        <input type="number" value={subtotal} readOnly />
       </div>
 
       {/* הנחה */}
@@ -220,7 +200,7 @@ export default function NewPayment() {
         <input
           type="number"
           min={0}
-          max={amount}
+          max={subtotal}
           value={form.discount}
           onChange={e => updateField('discount', Number(e.target.value))}
         />

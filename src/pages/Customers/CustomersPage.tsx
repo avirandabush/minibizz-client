@@ -22,10 +22,10 @@ export default function CustomersPage() {
     filterOptions
   } = useListManager({
     items: customers,
-    searchFields: (c) => [c.name, c.phone || '', c.email || ''],
+    searchFields: (c) => [c.personal.name, c.contact.phone || '', c.contact.email || ''],
     sortLogics: {
-      [t('customers.sort.nameAsc')]: (a, b) => a.name.localeCompare(b.name),
-      [t('customers.sort.nameDesc')]: (a, b) => b.name.localeCompare(a.name),
+      [t('customers.sort.nameAsc')]: (a, b) => a.personal.name.localeCompare(b.personal.name),
+      [t('customers.sort.nameDesc')]: (a, b) => b.personal.name.localeCompare(a.personal.name),
       [t('customers.sort.newest')]: (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
     },
     filterLogics: {
