@@ -38,25 +38,6 @@ export default function NewPayment() {
     setErrors(prev => ({ ...prev, [field]: '' }))
   }
 
-  const handleQuantityChange = (treatmentId: string, quantity: number) => {
-    if (quantity <= 0) {
-      setSelected(prev => prev.filter(t => t.treatmentId !== treatmentId))
-      return
-    }
-
-    setSelected(prev => {
-      const exists = prev.find(t => t.treatmentId === treatmentId)
-
-      if (exists) {
-        return prev.map(t =>
-          t.treatmentId === treatmentId ? { ...t, quantity } : t
-        )
-      }
-
-      return [...prev, { treatmentId, quantity }]
-    })
-  }
-
   const subtotal = useMemo(() => {
     return selected.reduce((sum, sel) => {
       const t = activeTreatments.find(item => item.id === sel.treatmentId)
