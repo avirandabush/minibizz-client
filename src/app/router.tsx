@@ -16,6 +16,7 @@ import TreatmentDetails from '../pages/Treatments/TreatmentDetails'
 
 import SettingsPage from '../pages/Settings/SettingPage'
 import AuthPage from '../pages/Auth/AuthPage'
+import SetupPage from '../pages/Settings/SetupPage'
 
 function AppRoutes() {
   return (
@@ -23,6 +24,7 @@ function AppRoutes() {
 
       {/* Auth */}
       <Route path="/auth" element={<AuthPage />} />
+      <Route path="/setup" element={<SetupPage />} />
 
       <Route element={<ProtectedRoute><Layout /></ProtectedRoute>}>
 

@@ -1,9 +1,11 @@
 import { useAuth } from '../../app/AuthContext'
 import { useTranslation } from 'react-i18next'
 import './SettingPage.css'
+import { useAppUser } from '../../app/UserProvider'
 
 export default function SettingsPage() {
   const { user, logout } = useAuth()
+  const { userProfile } = useAppUser()
   const { t, i18n } = useTranslation()
 
   const toggleLanguage = () => {
@@ -23,6 +25,8 @@ export default function SettingsPage() {
       <div className="settings-content">
         <h3>Welcome</h3>
         <p>{user?.email}!</p>
+        <p>{userProfile?.name}!</p>
+        <p>{userProfile?.business?.name}!</p>
 
         <div style={{ margin: '20px 0', padding: '10px' }}>
           <p> {t('settings.language.current')} {i18n.language === 'he' ? t('settings.language.hebrew') : 'English'}</p>

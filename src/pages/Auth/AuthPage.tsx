@@ -1,9 +1,11 @@
 import { useState } from 'react'
 import { Navigate } from 'react-router-dom'
 import { useAuth } from '../../app/AuthContext'
+import { useAppUser } from '../../app/UserProvider'
 
 export default function AuthPage() {
   const { login, register, user } = useAuth()
+  const { initialized, userProfile } = useAppUser()
 
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -17,8 +19,12 @@ export default function AuthPage() {
     }
   }
 
-  if (user) {
-    return <Navigate to="/payments" replace />
+  if (user && initialized) {
+    if (userProfile) {
+      return <Navigate to="/settings" replace />
+    } else {
+      return <Navigate to="/setup" replace />
+    }
   }
 
   return (
