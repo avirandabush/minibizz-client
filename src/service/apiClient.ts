@@ -1,6 +1,6 @@
 import { auth } from '../lib/firebase'
 
-const BASE_URL = 'https://minibizz-server.onrender.com'
+const BASE_URL = 'http://localhost:3000'
 
 async function getAuthToken() {
   const user = auth.currentUser
