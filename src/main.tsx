@@ -1,8 +1,8 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
-import { AuthProvider } from './app/AuthContext'
-import { UserProvider } from './app/UserProvider'
-import App from './app/App'
+import { AuthProvider } from './features/auth/context/AuthContext'
+import { UserProvider } from './features/user/providers/UserProvider'
+import App from './App'
 import './i18n'
 import './index.css'
 
