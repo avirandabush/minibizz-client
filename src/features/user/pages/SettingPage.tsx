@@ -1,12 +1,14 @@
 import { useAuth } from '@/features/auth/context/AuthContext'
 import { useTranslation } from 'react-i18next'
 import { useAppUser } from '../providers/UserProvider'
+import packageJson from '@/../package.json'
 import './SettingPage.css'
 
 export default function SettingsPage() {
   const { user, logout } = useAuth()
   const { userProfile } = useAppUser()
   const { t, i18n } = useTranslation()
+  const appVersion = packageJson.version
 
   const toggleLanguage = () => {
     const newLang = i18n.language === 'he' ? 'en' : 'he'
@@ -39,7 +41,7 @@ export default function SettingsPage() {
       </div>
 
       <div className="settings-footer">
-        <div>גרסה 1.0.0</div>
+        <div>גרסה {appVersion}</div>
         <div>
           פותח על ידי{' '}
           <a href="https://avirandabush.co.il" target="_blank" rel="noreferrer">
