@@ -6,11 +6,17 @@ export default function ProtectedRoute({ children }: any) {
     const { user, loading: authLoading } = useAuth()
     const { userProfile, loading: userLoading, initialized } = useAppUser()
 
-    if (authLoading || userLoading || !initialized) return <div>Loading User Profile...</div>
+    if (authLoading || userLoading || !initialized) return <Navigate to="/splash" replace />
 
     if (!user) return <Navigate to="/auth" replace />
 
-    if (!userProfile) return <Navigate to="/setup" replace />
+    if (userLoading || !initialized) return <Navigate to="/splash" replace />
+
+    if (!userProfile && initialized) {
+        if (window.location.pathname !== '/setup') {
+            return <Navigate to="/setup" replace />
+        }
+    }
 
     return children
 }

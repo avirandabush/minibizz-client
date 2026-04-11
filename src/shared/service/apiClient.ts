@@ -2,8 +2,22 @@ import { auth } from '../lib/firebase'
 
 const BASE_URL = import.meta.env.VITE_API_URL
 
+async function waitForAuth() {
+  return new Promise((resolve) => {
+    const unsubscribe = auth.onAuthStateChanged((user) => {
+      unsubscribe();
+      resolve(user);
+    });
+  });
+}
+
 async function getAuthToken() {
-  const user = auth.currentUser
+  let user = auth.currentUser
+
+  if (!user) {
+    user = await waitForAuth() as any;
+  }
+
   if (!user) return null
 
   try {
@@ -19,9 +33,9 @@ async function request<T>(
   options?: RequestInit,
   includeUser = false
 ): Promise<T> {
-  let finalUrl = `${BASE_URL}${url}`
-
+  const finalUrl = `${BASE_URL}${url}`
   const headers = new Headers(options?.headers)
+
   headers.set('Content-Type', 'application/json')
 
   if (includeUser) {
@@ -37,8 +51,13 @@ async function request<T>(
   })
 
   if (!res.ok) {
-    const text = await res.text()
-    throw new Error(text || `API Error {res.status}`)
+    const errorData = await res.json().catch(() => ({}));
+
+    const error: any = new Error(errorData.error || errorData.message || 'שגיאת תקשורת');
+    error.status = res.status;
+    error.data = errorData;
+
+    throw error;
   }
 
   const contentType = res.headers.get('content-type')
@@ -50,7 +69,8 @@ async function request<T>(
 }
 
 export const apiClient = {
-  get: <T>(url: string) => request<T>(url, { method: 'GET' }, true),
+  get: <T>(url: string) =>
+    request<T>(url, { method: 'GET' }, true),
 
   post: <T>(url: string, body: unknown) =>
     request<T>(url, { method: 'POST', body: JSON.stringify(body) }, true),

@@ -1,4 +1,3 @@
-import { BrowserRouter } from 'react-router-dom'
 import { useEffect, useState } from 'react'
 import AppRoutes from './routers/router'
 import Splash from '@/shared/components/Splash/Splash'
@@ -19,9 +18,7 @@ function App() {
   }
 
   return (
-    <BrowserRouter>
-      <AppRoutes />
-    </BrowserRouter>
+    <AppRoutes />
   )
 }
 

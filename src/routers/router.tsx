@@ -17,6 +17,7 @@ import TreatmentDetails from '@/features/treatments/pages/TreatmentDetails'
 import SettingsPage from '@/features/user/pages/SettingPage'
 import AuthPage from '@/features/auth/pages/AuthPage'
 import SetupPage from '@/features/user/pages/SetupPage'
+import Splash from '@/shared/components/Splash/Splash'
 
 function AppRoutes() {
   return (
@@ -25,6 +26,7 @@ function AppRoutes() {
       {/* Auth */}
       <Route path="/auth" element={<AuthPage />} />
       <Route path="/setup" element={<SetupPage />} />
+      <Route path="/splash" element={<Splash />} />
 
       <Route element={<ProtectedRoute><Layout /></ProtectedRoute>}>
 

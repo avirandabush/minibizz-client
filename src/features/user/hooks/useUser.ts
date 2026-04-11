@@ -12,9 +12,13 @@ export function useUser() {
     try {
       const data = await usersApi.getMe()
       setUserProfile(data)
-    } catch (err) {
-      console.error('fetchUser failed', err)
-      setUserProfile(null)
+    }
+    catch (err: any) {
+      if (err.status === 404 || err.message.includes('404')) {
+        setUserProfile(null)
+      } else {
+        console.error('שגיאה בטעינת משתמש:', err.message)
+      }
     } finally {
       setLoading(false)
       setInitialized(true)

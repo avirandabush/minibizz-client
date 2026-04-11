@@ -10,6 +10,8 @@ export default function SetupPage() {
     const { setUserProfile } = useAppUser()
     const navigate = useNavigate()
 
+    const [loading, setLoading] = useState(false)
+
     const [formData, setFormData] = useState({
         name: '',
         businessName: '',

@@ -37,7 +37,7 @@ export default function SettingsPage() {
           </button>
         </div>
 
-        <button onClick={logout}>התנתק</button>
+        <button onClick={() => { logout() }}>התנתק</button>
       </div>
 
       <div className="settings-footer">

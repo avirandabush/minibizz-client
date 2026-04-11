@@ -1,11 +1,10 @@
-import { useState } from 'react'
-import { Navigate } from 'react-router-dom'
+import { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
-import { useAppUser } from '@/features/user/providers/UserProvider'
 
 export default function AuthPage() {
+  const navigate = useNavigate()
   const { login, register, user } = useAuth()
-  const { initialized, userProfile } = useAppUser()
 
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -19,13 +18,11 @@ export default function AuthPage() {
     }
   }
 
-  if (user && initialized) {
-    if (userProfile) {
-      return <Navigate to="/settings" replace />
-    } else {
-      return <Navigate to="/setup" replace />
+  useEffect(() => {
+    if (user) {
+      navigate('/', { replace: true });
     }
-  }
+  }, [user, navigate]);
 
   return (
     <div className="page-container">
