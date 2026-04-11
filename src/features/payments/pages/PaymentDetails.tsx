@@ -4,7 +4,7 @@ import { useCustomers } from '@/features/customers/hooks/useCustomers'
 import { useState, useEffect } from 'react'
 import DetailsLayout from '@/shared/components/ItemDetails/DetailsLayout'
 import DetailsRow from '@/shared/components/ItemDetails/DetailsRow'
-import type { Payment } from '../types'
+import { type Payment, PaymentMethod } from '../types'
 
 export default function PaymentDetailsPage() {
   const { id } = useParams()
@@ -13,32 +13,34 @@ export default function PaymentDetailsPage() {
   const { customers } = useCustomers()
   const { fetchPayment, updatePayment, deletePayment } = usePayments()
 
-  // State מקומי לתשלום הספציפי
   const [payment, setPayment] = useState<Payment | null>(null)
   const [loading, setLoading] = useState(true)
   const [isEditing, setIsEditing] = useState(false)
   const [saving, setSaving] = useState(false)
 
-  // שדות עריכה
-  const [subtotal, setSubtotal] = useState('')
-  const [discount, setDiscount] = useState('')
-  const [selectedCustomerId, setSelectedCustomerId] = useState('')
+  const [form, setForm] = useState({
+    customerId: '',
+    subtotal: 0,
+    discount: 0,
+    method: '' as PaymentMethod,
+    date: ''
+  })
 
   useEffect(() => {
     async function loadData() {
       if (!id) return
-      setLoading(true)
       try {
         const data = await fetchPayment(id)
         if (data) {
           setPayment(data)
-          // עדכון שדות העריכה בנתונים שהגיעו
-          setSubtotal(data.summary.subtotal.toString())
-          setDiscount(data.summary.discount.toString())
-          setSelectedCustomerId(data.customerId)
+          setForm({
+            customerId: data.customerId,
+            subtotal: data.summary.subtotal,
+            discount: data.summary.discount,
+            method: data.method,
+            date: new Date(data.date).toISOString().split('T')[0]
+          })
         }
-      } catch (err) {
-        console.error("Failed to load payment", err)
       } finally {
         setLoading(false)
       }
@@ -46,90 +48,47 @@ export default function PaymentDetailsPage() {
     loadData()
   }, [id])
 
-  if (loading) return <div className="p-4 text-center">טוען נתונים...</div>
-  if (!payment) return <div className="p-4 text-center">תשלום לא נמצא</div>
+  if (loading) return <div className="loading-state">טוען...</div>
+  if (!payment) return <div className="error-state">תשלום לא נמצא</div>
 
-  const isValid =
-    subtotal.trim().length > 0 &&
-    !isNaN(parseFloat(subtotal)) &&
-    discount.trim().length > 0 &&
-    !isNaN(parseFloat(discount)) &&
-    parseFloat(subtotal) >= parseFloat(discount)
-
-  const getCustomerName = (customerId: string) => {
-    return customers.find(c => c.id === customerId)?.personal.name || 'לקוח לא ידוע'
-  }
+  const total = Math.max(form.subtotal - form.discount, 0)
 
   const handleSave = async () => {
-    if (!isValid || !payment) return
+    if (!form.customerId) return alert('חובה לבחור לקוח')
     setSaving(true)
 
     try {
-      const newSubtotal = parseFloat(subtotal)
-      const newDiscount = parseFloat(discount)
-
       const updatedData = {
+        customerId: form.customerId,
+        method: form.method,
+        date: new Date(form.date).toISOString(),
         summary: {
-          subtotal: newSubtotal,
-          discount: newDiscount,
-          total: newSubtotal - newDiscount,
-        },
-        customerId: selectedCustomerId
+          subtotal: form.subtotal,
+          discount: form.discount,
+          total: total
+        }
       }
 
       await updatePayment(payment.id, updatedData)
-
-      // עדכון ה-State המקומי כדי שהתצוגה תתעדכן
-      setPayment({
-        ...payment,
-        ...updatedData,
-        summary: { ...updatedData.summary }
-      })
-
+      setPayment(prev => prev ? { ...prev, ...updatedData } : null)
       setIsEditing(false)
+    } catch (err) {
+      alert('שגיאה בעדכון התשלום')
     } finally {
       setSaving(false)
     }
   }
 
-  const handleCancel = () => {
-    setSubtotal(payment.summary.subtotal.toString())
-    setDiscount(payment.summary.discount.toString())
-    setSelectedCustomerId(payment.customerId)
-    setIsEditing(false)
-  }
-
-  const handleDelete = async () => {
-    if (!payment) return
-    const confirmDelete = confirm('האם אתה בטוח שברצונך למחוק תשלום זה?')
-    if (!confirmDelete) return
-
-    await deletePayment(payment.id)
-    navigate('/payments')
-  }
-
   return (
     <DetailsLayout
-      title={`פרטי תשלום: ${payment.referenceNumber}`}
+      title={`${payment.referenceNumber}`}
       leftAction={
         !isEditing ? (
-          payment.status === 'COMPLETED' ? (
-            <span className="text-sm text-gray-500 bg-gray-100 px-3 py-1 rounded-full">
-              תשלום הושלם
-            </span>
-          ) : (
-            <button className="secondary-btn" onClick={() => setIsEditing(true)}>
-              עריכה
-            </button>
-          )
+          <button className="secondary-btn" onClick={() => setIsEditing(true)}>עריכה</button>
         ) : (
-          <div className="flex gap-2">
-            <button className="text-btn" onClick={handleCancel}>ביטול</button>
-            <button
-              onClick={handleSave}
-              disabled={!isValid || saving}
-              className="primary-btn"
-            >
+          <div className="actions-row">
+            <button onClick={() => setIsEditing(false)}>ביטול</button>
+            <button onClick={handleSave} disabled={saving} className="primary-btn">
               {saving ? 'שומר...' : 'שמור'}
             </button>
           </div>
@@ -137,58 +96,63 @@ export default function PaymentDetailsPage() {
       }
     >
       {!isEditing ? (
-        <div className="space-y-4">
-          <DetailsRow label="לקוח" value={getCustomerName(payment.customerId)} />
-          <DetailsRow label="סכום (לפני הנחה)" value={`₪${payment.summary.subtotal.toFixed(2)}`} />
-          <DetailsRow label="הנחה" value={`₪${payment.summary.discount.toFixed(2)}`} />
-          <DetailsRow label="סה״כ לתשלום" value={`₪${payment.summary.total.toFixed(2)}`} />
+        <div className="details-view">
+          <DetailsRow label="לקוח" value={customers.find(c => c.id === payment.customerId)?.personal.name || 'לקוח לא ידוע'} />
+          <DetailsRow label="תאריך" value={new Date(payment.date).toLocaleDateString('he-IL')} />
           <DetailsRow label="אמצעי תשלום" value={payment.method} />
-          <DetailsRow
-            label="תאריך"
-            value={new Date(payment.date).toLocaleDateString('he-IL')}
-          />
+          <hr />
+          <div className="items-list" style={{ margin: '15px 0' }}>
+            <strong>פירוט טיפולים:</strong>
+            {payment.items.map((item, idx) => (
+              <div key={idx} className="item-line" style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.9rem' }}>
+                <span>{item.name} (x{item.quantity})</span>
+                <span>₪{(item.price * item.quantity).toFixed(2)}</span>
+              </div>
+            ))}
+          </div>
+          <hr />
+          <DetailsRow label="סה״כ לפני הנחה" value={`₪${payment.summary.subtotal.toFixed(2)}`} />
+          <DetailsRow label="הנחה" value={`₪${payment.summary.discount.toFixed(2)}`} />
+          <DetailsRow label="סה״כ שולם" value={<strong>₪{payment.summary.total.toFixed(2)}</strong>} />
         </div>
       ) : (
-        <div className="space-y-4">
-
+        <div className="edit-form">
           <div className="form-group">
-            <label className="block text-sm font-medium mb-1">לקוח</label>
-            <select
-              value={selectedCustomerId}
-              onChange={e => setSelectedCustomerId(e.target.value)}
-              className="w-full p-2 border border-gray-300 rounded"
-            >
-              {customers.map(c => (
-                <option key={c.id} value={c.id}>{c.personal.name}</option>
-              ))}
+            <label>לקוח</label>
+            <select value={form.customerId} onChange={e => setForm({ ...form, customerId: e.target.value })}>
+              {customers.map(c => <option key={c.id} value={c.id}>{c.personal.name}</option>)}
             </select>
           </div>
 
           <div className="form-group">
-            <label className="block text-sm font-medium mb-1">סכום בסיס (₪) *</label>
-            <input
-              type="number"
-              value={subtotal}
-              onChange={e => setSubtotal(e.target.value)}
-              className={`w-full p-2 border rounded ${!isValid ? 'border-red-500' : 'border-gray-300'}`}
-            />
+            <label>תאריך</label>
+            <input type="date" value={form.date} onChange={e => setForm({ ...form, date: e.target.value })} />
           </div>
 
           <div className="form-group">
-            <label className="block text-sm font-medium mb-1">הנחה (₪) *</label>
-            <input
-              type="number"
-              value={discount}
-              onChange={e => setDiscount(e.target.value)}
-              className={`w-full p-2 border rounded ${!isValid ? 'border-red-500' : 'border-gray-300'}`}
-            />
+            <label>סכום בסיס</label>
+            <input type="number" value={form.subtotal} onChange={e => setForm({ ...form, subtotal: Number(e.target.value) })} />
           </div>
 
-          <div className="pt-6 border-t mt-6">
-            <button className="w-full p-2 text-red-600 border border-red-200 rounded hover:bg-red-50" onClick={handleDelete}>
-              מחק תשלום
-            </button>
+          <div className="form-group">
+            <label>הנחה</label>
+            <input type="number" value={form.discount} onChange={e => setForm({ ...form, discount: Number(e.target.value) })} />
           </div>
+
+          <div className="form-group">
+            <label>אמצעי תשלום</label>
+            <select value={form.method} onChange={e => setForm({ ...form, method: e.target.value as PaymentMethod })}>
+              {Object.values(PaymentMethod).map(m => <option key={m} value={m}>{m}</option>)}
+            </select>
+          </div>
+
+          <div className="total-preview" style={{ padding: '15px', background: '#f8f9fa', borderRadius: '8px', textAlign: 'center' }}>
+            סה״כ חדש: <strong>₪{total}</strong>
+          </div>
+
+          <button className="delete-btn" onClick={() => { if (confirm('למחוק?')) { deletePayment(payment.id); navigate('/payments'); } }}>
+            מחק תשלום
+          </button>
         </div>
       )}
     </DetailsLayout>

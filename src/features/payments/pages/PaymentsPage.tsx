@@ -1,4 +1,3 @@
-
 import { useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { usePayments } from '../hooks/usePayments'
@@ -28,7 +27,7 @@ export default function PaymentsPage() {
     items: payments,
     searchFields: (p) => [
       customers.find(c => c.id === p.customerId)?.personal.name || '',
-      p.referenceNumber || '',
+      p.referenceNumber,
       (p.items || []).map(t => t.name).join(' '),
     ],
     sortLogics: {
@@ -74,9 +73,13 @@ export default function PaymentsPage() {
       ? PaymentStatus.PENDING
       : PaymentStatus.COMPLETED
 
-    await updatePayment(p.id, {
-      status: newStatus
-    })
+    try {
+      await updatePayment(p.id, {
+        status: newStatus
+      })
+    } catch (error) {
+      console.error('Error updating payment status:', error);
+    }
   }
 
   const handleAdd = () => {
