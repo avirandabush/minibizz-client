@@ -3,6 +3,16 @@ import { useTreatments } from '../hooks/useTreatments'
 import { useState, useEffect } from 'react'
 import DetailsLayout from '@/shared/components/ItemDetails/DetailsLayout'
 import DetailsRow from '@/shared/components/ItemDetails/DetailsRow'
+import { TreatmentColor } from '../types'
+
+type TreatmentForm = {
+  name: string;
+  price: number;
+  durationMinutes: number;
+  description: string;
+  color: TreatmentColor;
+  isActive: boolean;
+};
 
 export default function TreatmentDetails() {
   const { id } = useParams()
@@ -12,70 +22,73 @@ export default function TreatmentDetails() {
   const treatment = treatments.find(t => t.id === id)
 
   const [isEditing, setIsEditing] = useState(false)
-  const [name, setName] = useState('')
-  const [price, setPrice] = useState(0)
   const [saving, setSaving] = useState(false)
+
+  const [form, setForm] = useState<TreatmentForm>({
+    name: '',
+    price: 0,
+    durationMinutes: 60,
+    description: '',
+    color: TreatmentColor.BLUE,
+    isActive: true
+  })
 
   useEffect(() => {
     if (treatment) {
-      setName(treatment.name)
-      setPrice(treatment.specs.price)
+      setForm({
+        name: treatment.name,
+        price: treatment.specs.price,
+        durationMinutes: treatment.specs.durationMinutes,
+        description: treatment.description || '',
+        color: treatment.color as TreatmentColor,
+        isActive: treatment.isActive ?? true
+      })
     }
-  }, [treatment])
+  }, [treatment, isEditing])
 
-  if (loading) return <div>Loading...</div>
-  if (!treatment) return <div>טיפול לא נמצא</div>
-
-  const isValid = name.trim().length > 0
+  if (loading) return <div className="loading-state">טוען...</div>
+  if (!treatment) return <div className="error-state">טיפול לא נמצא</div>
 
   const handleSave = async () => {
-    if (!isValid) return
+    if (!form.name.trim()) return alert('שם חובה')
 
     setSaving(true)
-
     try {
       await updateTreatment(treatment.id, {
-        name: name.trim(),
+        name: form.name.trim(),
+        description: form.description,
+        color: form.color,
+        isActive: form.isActive,
         specs: {
-          price,
-          durationMinutes: 0
+          price: Number(form.price),
+          durationMinutes: Number(form.durationMinutes)
         }
       })
-
       setIsEditing(false)
+    } catch (err) {
+      alert('שגיאה בעדכון הטיפול')
     } finally {
       setSaving(false)
     }
   }
 
-  const handleCancel = () => {
-    setName(treatment.name)
-    setPrice(treatment.specs.price)
-    setIsEditing(false)
-  }
-
   const handleDelete = async () => {
-    const confirmDelete = confirm('למחוק טיפול?')
-    if (!confirmDelete) return
-
-    await deleteTreatment(treatment.id)
-    navigate('/treatments')
+    if (confirm('למחוק טיפול זה לצמיתות?')) {
+      await deleteTreatment(treatment.id)
+      navigate('/treatments')
+    }
   }
 
   return (
     <DetailsLayout
-      title="פרטי טיפול"
+      title={isEditing ? "עריכת טיפול" : treatment.name}
       leftAction={
         !isEditing ? (
           <button onClick={() => setIsEditing(true)}>עריכה</button>
         ) : (
           <div className="actions-row">
-            <button onClick={handleCancel}>ביטול</button>
-            <button
-              onClick={handleSave}
-              disabled={!isValid || saving}
-              className="primary-btn"
-            >
+            <button onClick={() => setIsEditing(false)}>ביטול</button>
+            <button onClick={handleSave} disabled={saving} className="primary-btn">
               {saving ? 'שומר...' : 'שמור'}
             </button>
           </div>
@@ -83,22 +96,24 @@ export default function TreatmentDetails() {
       }
     >
       {!isEditing ? (
-        <>
-          <DetailsRow label="שם" value={treatment.name} />
-          <DetailsRow label="מחיר" value={treatment.specs.price.toFixed(2)} />
-          <DetailsRow
-            label="נוצר בתאריך"
-            value={new Date(treatment.createdAt).toLocaleDateString('he-IL')}
-          />
-        </>
+        <div className="details-view">
+          <DetailsRow label="שם הטיפול" value={treatment.name} />
+          <DetailsRow label="מחיר" value={`₪${treatment.specs.price}`} />
+          <DetailsRow label="משך זמן" value={`${treatment.specs.durationMinutes} דקות`} />
+          <DetailsRow label="סטטוס" value={treatment.isActive ? 'פעיל' : 'לא פעיל'} />
+          <DetailsRow label="תיאור" value={treatment.description || 'אין תיאור'} />
+          <div className="details-row">
+            <span className="label">צבע במערכת:</span>
+            <div className={`color-preview ${treatment.color}`} />
+          </div>
+        </div>
       ) : (
-        <>
+        <div className="edit-form">
           <div className="form-group">
-            <label>שם *</label>
+            <label>שם הטיפול *</label>
             <input
-              value={name}
-              onChange={e => setName(e.target.value)}
-              className={!isValid ? 'input-error' : ''}
+              value={form.name}
+              onChange={e => setForm({ ...form, name: e.target.value })}
             />
           </div>
 
@@ -106,15 +121,48 @@ export default function TreatmentDetails() {
             <label>מחיר</label>
             <input
               type="number"
-              value={price}
-              onChange={e => setPrice(Number(e.target.value))}
+              value={form.price}
+              onChange={e => setForm({ ...form, price: Number(e.target.value) })}
             />
           </div>
 
-          <button className="delete-btn" onClick={handleDelete}>
-            מחק לקוח
+          <div className="form-group">
+            <label>משך זמן (דקות)</label>
+            <select
+              value={form.durationMinutes}
+              onChange={e => setForm({ ...form, durationMinutes: Number(e.target.value) })}
+            >
+              {[15, 30, 45, 60, 90, 120].map(m => (
+                <option key={m} value={m}>{m} דקות</option>
+              ))}
+            </select>
+          </div>
+
+          <div className="form-group">
+            <label>צבע</label>
+            <div className="color-picker">
+              {Object.values(TreatmentColor).map(c => (
+                <button
+                  key={c}
+                  className={`color ${c} ${form.color === c ? 'selected' : ''}`}
+                  onClick={() => setForm({ ...form, color: c })}
+                />
+              ))}
+            </div>
+          </div>
+
+          <div className="form-group">
+            <label>תיאור</label>
+            <textarea
+              value={form.description}
+              onChange={e => setForm({ ...form, description: e.target.value })}
+            />
+          </div>
+
+          <button className="delete-btn" onClick={handleDelete} style={{ marginTop: '20px' }}>
+            מחק טיפול
           </button>
-        </>
+        </div>
       )}
     </DetailsLayout>
   )
