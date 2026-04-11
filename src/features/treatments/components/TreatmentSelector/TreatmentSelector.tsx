@@ -51,6 +51,7 @@ export default function TreatmentSelector({
           <div
             key={t.id}
             className={`treatment-card ${isSelected ? 'selected' : ''}`}
+            style={{ borderRight: `6px solid var(--color-${t.color.toLowerCase()})` }}
           >
             <div className="treatment-name">{t.name}</div>
             <div className="treatment-bottom">

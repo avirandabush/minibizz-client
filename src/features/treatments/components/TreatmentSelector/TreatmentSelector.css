@@ -60,3 +60,68 @@
   text-align: center;
   font-size: 14px;
 }
+
+.color-picker {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 8px;
+}
+
+.color {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 2px solid transparent;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.color.selected {
+  border-color: #333;
+  transform: scale(1.1);
+}
+
+.BLUE {
+  background-color: var(--color-blue);
+}
+
+.GREEN {
+  background-color: var(--color-green);
+}
+
+.ORANGE {
+  background-color: var(--color-orange);
+}
+
+.PURPLE {
+  background-color: var(--color-purple);
+}
+
+.RED {
+  background-color: var(--color-red);
+}
+
+.YELLOW {
+  background-color: var(--color-yellow);
+}
+
+.GRAY {
+  background-color: var(--color-gray);
+}
+
+.PINK {
+  background-color: var(--color-pink);
+}
+
+.color-preview {
+  width: 20px;
+  height: 20px;
+  border-radius: 4px;
+  display: inline-block;
+}
+
+.treatment-card {
+  border: 1px solid #ddd;
+  border-left: 6px solid transparent;
+}

@@ -5,6 +5,15 @@
   --color-ultra-light: #a8f3af;
   --color-dark: #033a07;
 
+  --color-blue: #3498db;
+  --color-green: #2ecc71;
+  --color-orange: #f39c12;
+  --color-purple: #9b59b6;
+  --color-red: #e74c3c;
+  --color-yellow: #f1c40f;
+  --color-gray: #95a5a6;
+  --color-pink: #fd79a8;
+
   --font-family-base: system-ui, Avenir, Helvetica, Arial, sans-serif;
 }
 
