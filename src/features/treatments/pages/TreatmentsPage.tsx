@@ -39,6 +39,7 @@ export default function TreatmentsPage() {
     const status = t.isActive === true ? false : true
 
     await updateTreatment(t.id, {
+      ...t,
       isActive: status
     })
   }
