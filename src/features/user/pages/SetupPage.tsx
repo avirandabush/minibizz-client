@@ -17,56 +17,84 @@ export default function SetupPage() {
         businessName: '',
         phone: '',
         dealerType: DealerType,
+        dealerNo: '',
         address: '',
         professionalField: ''
     });
 
-    const handleSubmit = async () => {
-        const created = await usersApi.create({
-            authId: user!.uid,
-            plan: UserPlan.SILVER,
-            status: UserStatus.ACTIVE,
-            name: formData.name,
-            contact: {
-                email: user?.email || '',
-                phone: formData.phone,
-                alternatePhone: undefined
-            },
-            business: {
-                name: formData.businessName,
-                legalName: "",
-                dealerNo: "",
-                dealerType: "EXEMPT",
-                professionalField: formData.professionalField,
-                address: formData.address,
-                website: undefined,
-                logoUrl: undefined
-            },
-            preferences: {
-                language: "he",
-                darkMode: false
-            }
-        })
+    const isValid = formData.name && formData.businessName && formData.phone;
 
-        setUserProfile(created)
-        navigate('/payments')
+    const handleSubmit = async () => {
+        if (!isValid) return alert("אנא מלא את כל שדות החובה");
+
+        setLoading(true);
+
+        try {
+            const created = await usersApi.create({
+                name: formData.name,
+                plan: UserPlan.SILVER,
+                status: UserStatus.ACTIVE,
+                contact: {
+                    email: user?.email || '',
+                    phone: formData.phone,
+                },
+                business: {
+                    name: formData.businessName,
+                    legalName: formData.businessName,
+                    dealerNo: formData.dealerNo,
+                    dealerType: DealerType.EXEMPT,
+                    professionalField: formData.professionalField,
+                    address: formData.address,
+                },
+                preferences: {
+                    language: "he",
+                    darkMode: false
+                }
+            });
+
+            setUserProfile(created);
+            navigate('/payments');
+        } catch (error) {
+            alert("אירעה שגיאה ביצירת הפרופיל. אנא נסה שוב.");
+        }
+        finally {
+            setLoading(false);
+        }
     }
 
     return (
-        <div>
-            <h2>השלמת פרטים</h2>
-            {/* טופס */}
-            <input placeholder="שם מלא"
-                onChange={e => setFormData({ ...formData, name: e.target.value })} />
-            <input placeholder="שם העסק"
-                onChange={e => setFormData({ ...formData, businessName: e.target.value })} />
-            <input placeholder="טלפון"
-                onChange={e => setFormData({ ...formData, phone: e.target.value })} />
-            <input placeholder="כתובת"
-                onChange={e => setFormData({ ...formData, address: e.target.value })} />
-            <input placeholder="תחום עיסוק"
-                onChange={e => setFormData({ ...formData, professionalField: e.target.value })} />
-            <button onClick={handleSubmit}>סיום</button>
+        <div className="page-container">
+            <h2>ברוכים הבאים! בוא נקים את העסק שלך</h2>
+
+            <div className="form-group">
+                <input placeholder="שם מלא *" value={formData.name}
+                    onChange={e => setFormData({ ...formData, name: e.target.value })} />
+            </div>
+            <div className="form-group">
+                <input placeholder="שם העסק *" value={formData.businessName}
+                    onChange={e => setFormData({ ...formData, businessName: e.target.value })} />
+            </div>
+            <div className="form-group">
+                <input placeholder="מספר עוסק *" value={formData.dealerNo}
+                    onChange={e => setFormData({ ...formData, dealerNo: e.target.value })} />
+            </div>
+            <div className="form-group">
+                <input placeholder="טלפון *" value={formData.phone}
+                    onChange={e => setFormData({ ...formData, phone: e.target.value })} />
+            </div>
+            <div className="form-group">
+                <input placeholder="כתובת" value={formData.address}
+                    onChange={e => setFormData({ ...formData, address: e.target.value })} />
+            </div>
+            <div className="form-group">
+                <input placeholder="תחום עיסוק (למשל: קוסמטיקה)" value={formData.professionalField}
+                    onChange={e => setFormData({ ...formData, professionalField: e.target.value })} />
+            </div>
+            <div className="form-actions">
+                <button onClick={handleSubmit} disabled={!isValid || loading}>
+                    {loading ? 'מגדיר...' : 'סיום והתחלת עבודה'}
+                </button>
+            </div>
         </div>
     )
 }
