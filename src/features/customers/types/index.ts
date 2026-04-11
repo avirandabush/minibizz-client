@@ -15,7 +15,7 @@ export type CustomerPersonal = {
 };
 
 export type CustomerContact = {
-  phone: string;
+  phone?: string;
   alternatePhone?: string;
   email?: string;
   address?: string;

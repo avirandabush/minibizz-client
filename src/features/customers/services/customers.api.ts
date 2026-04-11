@@ -9,21 +9,11 @@ export const customersApi = {
   getById: (id: string) =>
     apiClient.get<Customer>(`/customers/${id}`),
 
-  create: (data: CreateCustomerDTO) => {
-    const now = new Date().toISOString();
-    
-    return apiClient.post<Customer>('/customers', {
-      ...data,
-      createdAt: now,
-      updatedAt: now
-    });
-  },
+  create: (data: CreateCustomerDTO) =>
+    apiClient.post<Customer>('/customers', data),
 
   update: (id: string, data: Partial<CreateCustomerDTO>) =>
-    apiClient.patch<Customer>(`/customers/${id}`, {
-      ...data,
-      updatedAt: new Date().toISOString()
-    }),
+    apiClient.patch<Customer>(`/customers/${id}`, data),
 
   delete: (id: string) => apiClient.delete<void>(`/customers/${id}`),
 }

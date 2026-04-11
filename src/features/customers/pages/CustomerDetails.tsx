@@ -36,9 +36,11 @@ export default function CustomerDetails() {
     try {
       await updateCustomer(customer.id, {
         personal: {
+          ...customer.personal,
           name: name.trim()
         },
         contact: {
+          ...customer.contact,
           phone: phone.trim()
         }
       })
