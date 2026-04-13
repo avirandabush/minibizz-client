@@ -10,8 +10,6 @@ export default function ProtectedRoute({ children }: any) {
 
     if (!user) return <Navigate to="/auth" replace />
 
-    if (userLoading || !initialized) return <Navigate to="/splash" replace />
-
     if (!userProfile && initialized) {
         if (window.location.pathname !== '/setup') {
             return <Navigate to="/setup" replace />
