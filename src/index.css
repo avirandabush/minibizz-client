@@ -14,6 +14,8 @@
   --color-gray: #95a5a6;
   --color-pink: #fd79a8;
 
+  --app-direction: rtl;
+
   --font-family-base: system-ui, Avenir, Helvetica, Arial, sans-serif;
 }
 
@@ -21,10 +23,11 @@ html,
 body,
 #root {
   height: 100vh;
+  direction: var(--app-direction);
 }
 
 body {
-  direction: rtl;
+  direction: var(--app-direction);
   min-width: 320px;
   margin: 0;
 

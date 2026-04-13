@@ -64,3 +64,11 @@
     display: none;
   }
 }
+
+html[dir="rtl"] .nav-bar {
+  direction: rtl;
+}
+
+html[dir="ltr"] .nav-bar {
+  direction: ltr;
+}

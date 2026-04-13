@@ -3,17 +3,26 @@ import { useTranslation } from 'react-i18next'
 import { useAppUser } from '../providers/UserProvider'
 import packageJson from '@/../package.json'
 import './SettingPage.css'
+import { useUser } from '../hooks/useUser'
 
 export default function SettingsPage() {
   const { user, logout } = useAuth()
   const { userProfile } = useAppUser()
   const { t, i18n } = useTranslation()
+  const { updateUser } = useUser()
   const appVersion = packageJson.version
 
-  const toggleLanguage = () => {
+  const toggleLanguage = async () => {
     const newLang = i18n.language === 'he' ? 'en' : 'he'
     i18n.changeLanguage(newLang)
-    localStorage.setItem('i18nextLng', newLang)
+
+    await updateUser({
+      ...userProfile,
+      preferences: {
+        ...userProfile?.preferences,
+        language: newLang
+      }
+    })
   }
 
   return (

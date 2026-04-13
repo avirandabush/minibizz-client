@@ -1,6 +1,7 @@
 import { createContext, useContext, useEffect } from 'react'
 import { useUser } from '../hooks/useUser'
 import { useAuth } from '@/features/auth/context/AuthContext'
+import i18n from '@/i18n'
 
 const UserContext = createContext<any>(null)
 
@@ -17,6 +18,12 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
             setInitialized(true)
         }
     }, [user, loading])
+
+    useEffect(() => {
+        if (userState.userProfile?.preferences?.language) {
+            i18n.changeLanguage(userState.userProfile.preferences.language)
+        }
+    }, [userState.userProfile])
 
     return (
         <UserContext.Provider value={userState}>

@@ -2,8 +2,9 @@ import { useNavigate } from "react-router-dom"
 import { useAuth } from "@/features/auth/context/AuthContext"
 import { useAppUser } from "../providers/UserProvider"
 import { usersApi } from "../services/users.api"
-import { DealerType, UserPlan, UserStatus } from "../types"
+import { AppLanguage, DealerType, UserPlan, UserStatus } from "../types"
 import { useState } from "react"
+import i18n from "@/i18n"
 
 export default function SetupPage() {
     const { user } = useAuth()
@@ -19,7 +20,8 @@ export default function SetupPage() {
         dealerType: DealerType,
         dealerNo: '',
         address: '',
-        professionalField: ''
+        professionalField: '',
+        language: AppLanguage.HE
     });
 
     const isValid = formData.name && formData.businessName && formData.phone;
@@ -47,11 +49,12 @@ export default function SetupPage() {
                     address: formData.address,
                 },
                 preferences: {
-                    language: "he",
+                    language: formData.language,
                     darkMode: false
                 }
             });
 
+            i18n.changeLanguage(formData.language)
             setUserProfile(created);
             navigate('/payments');
         } catch (error) {
