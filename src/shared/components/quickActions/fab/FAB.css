@@ -1,0 +1,112 @@
+.fab {
+    position: relative;
+    left: 50%;
+    top: 0;
+    transform: translate(-50%, -25%);
+
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    border: none;
+
+    background-color: #2ecc71;
+    color: white;
+    font-size: 28px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+    cursor: pointer;
+    z-index: 1000;
+    transition: transform 0.2s;
+}
+
+.fab:active {
+    transform: translate(-50%, -20%) scale(0.95);
+}
+
+.fab-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.2);
+    backdrop-filter: blur(4px);
+    z-index: 998;
+}
+
+.fab-container {
+    position: fixed;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 999;
+}
+
+.fab-menu {
+    position: absolute;
+    bottom: 100px;
+    left: 50%;
+    transform: translateX(-50%) translateY(10px);
+
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+
+    opacity: 0;
+    pointer-events: none;
+
+    transition: all 0.2s ease;
+}
+
+.fab-menu.open {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+    pointer-events: auto;
+}
+
+.fab-menu button {
+    min-width: 160px;
+    padding: 10px 14px;
+
+    border: none;
+    border-radius: 12px;
+
+    background: rgba(184, 242, 197, 0.9);
+    backdrop-filter: blur(6px);
+
+    color: #333;
+    font-size: 14px;
+    text-align: center;
+
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    cursor: pointer;
+
+    opacity: 0;
+    transform: translateY(10px);
+    transition: all 0.2s ease;
+}
+
+.fab-menu.open button {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.fab-menu button:hover {
+    background: rgb(24, 198, 140);
+    transform: translateY(-2px);
+}
+
+
+@media (max-width: 768px) {
+    .fab {
+        width: 60px;
+        height: 60px;
+    }
+}
+
+@media (max-width: 480px) {
+    .fab {
+        width: 54px;
+        height: 54px;
+    }
+}

@@ -1,5 +1,6 @@
 import { NavLink } from 'react-router-dom'
 import './NavBar.css'
+import FAB from '../quickActions/fab/FAB'
 
 export default function NavBar() {
   const getClassName = ({ isActive }: { isActive: boolean }) =>
@@ -18,6 +19,8 @@ export default function NavBar() {
           <span className="icon">👥</span>
           <span className="label">לקוחות</span>
         </NavLink>
+
+        <FAB />
 
         <NavLink to="/treatments" className={getClassName}>
           <span className="icon">🩺</span>
