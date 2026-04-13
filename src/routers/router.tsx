@@ -13,6 +13,7 @@ import PaymentDetails from '@/features/payments/pages/PaymentDetails'
 import TreatmentsPage from '@/features/treatments/pages/TreatmentsPage'
 import NewTreatment from '@/features/treatments/pages/NewTreatment'
 import TreatmentDetails from '@/features/treatments/pages/TreatmentDetails'
+import NewQuote from '@/features/treatments/pages/NewQuote'
 
 import SettingsPage from '@/features/user/pages/SettingPage'
 import AuthPage from '@/features/auth/pages/AuthPage'
@@ -53,6 +54,7 @@ function AppRoutes() {
           <Route index element={<TreatmentsPage />} />
           <Route path="new" element={<NewTreatment />} />
           <Route path=":id" element={<TreatmentDetails />} />
+          <Route path="create" element={<NewQuote />} />
         </Route>
 
         {/* Settings */}
